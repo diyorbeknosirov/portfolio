@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Icarus — Personal AI (demo)</title>
+<meta name="theme-color" content="#F3EEE4">
+<link rel="icon" href="images/icarus-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F3EEE4; --paper:#F8F4EC; --sand:#E9E1D2; --line:#D8CFBE;
+  --ink:#2B2823; --ink-2:#4A463F; --muted:#8C877C; --stone:#A39F97;
+  --gold:#CA9C4D; --gold-soft:rgba(202,156,77,.18); --ok:#5E8B5A;
+  --serif:"Cormorant Garamond", "Georgia", "Times New Roman", serif;
+  --sans:"Manrope", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --mono:ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{ margin:0; background:var(--cream); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; overflow:hidden; }
+button{ font:inherit; color:inherit; }
+:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; border-radius:8px; }
+
+/* Sun glow like the logo */
+.sun{ position:fixed; top:-120px; right:-120px; width:420px; height:420px; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle, rgba(202,156,77,.55) 0 6%, rgba(202,156,77,.28) 18%, rgba(202,156,77,0) 62%); animation:breathe 7s ease-in-out infinite; }
+@keyframes breathe{ 50%{ transform:scale(1.08); opacity:.85; } }
+
+/* Splash */
+.splash{ position:fixed; inset:0; z-index:50; background:var(--cream); display:grid; place-content:center; justify-items:center; gap:22px; transition:opacity .7s ease, visibility .7s; }
+.splash img{ width:min(220px,46vw); height:auto; border-radius:28%; box-shadow:0 20px 50px rgba(43,40,35,.12); animation:float 2.6s ease-in-out infinite; }
+.splash .word{ font-family:var(--serif); font-weight:500; font-size:clamp(34px,6vw,54px); letter-spacing:.34em; margin-right:-.34em; }
+.splash .rule{ width:160px; height:1px; background:var(--stone); transform-origin:center; animation:grow 1s ease .3s both; }
+.splash .tag{ font-family:var(--serif); letter-spacing:.42em; margin-right:-.42em; color:var(--muted); font-size:15px; }
+.splash.hide{ opacity:0; visibility:hidden; }
+@keyframes float{ 50%{ transform:translateY(-6px); } }
+@keyframes grow{ from{ transform:scaleX(0); } }
+
+/* App shell */
+.app{ height:100%; display:grid; grid-template-rows:auto auto 1fr; max-width:1100px; margin:0 auto; position:relative; }
+header{ display:flex; align-items:center; gap:12px; padding:calc(14px + env(safe-area-inset-top)) 18px 12px; }
+header img{ width:38px; height:38px; border-radius:11px; }
+.brand{ display:flex; flex-direction:column; line-height:1.05; }
+.brand b{ font-family:var(--serif); font-weight:600; font-size:21px; letter-spacing:.28em; }
+.brand span{ font-family:var(--serif); font-size:11px; letter-spacing:.34em; color:var(--muted); }
+.demo-pill{ margin-left:auto; display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--ink-2); background:var(--paper); border:1px solid var(--line); padding:6px 11px; border-radius:999px; }
+.demo-pill i{ width:7px; height:7px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 0 var(--gold-soft); animation:ping 2s infinite; }
+@keyframes ping{ 70%{ box-shadow:0 0 0 7px rgba(202,156,77,0); } }
+.note{ margin:0 18px 8px; font-size:12px; color:var(--muted); }
+.tabs{ display:none; }
+
+.main{ min-height:0; display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:16px; padding:0 18px calc(14px + env(safe-area-inset-bottom)); }
+.chat{ min-height:0; display:grid; grid-template-rows:1fr auto; background:var(--paper); border:1px solid var(--line); border-radius:22px; overflow:hidden; }
+.msgs{ overflow-y:auto; padding:18px 16px 8px; display:flex; flex-direction:column; gap:12px; scroll-behavior:smooth; }
+.msg{ max-width:82%; padding:10px 14px; border-radius:18px; animation:pop .35s cubic-bezier(.16,1,.3,1) both; white-space:pre-line; }
+.msg.ai{ align-self:flex-start; background:var(--sand); border-bottom-left-radius:6px; }
+.msg.me{ align-self:flex-end; background:var(--ink); color:var(--cream); border-bottom-right-radius:6px; }
+@keyframes pop{ from{ opacity:0; transform:translateY(8px) scale(.98); } }
+.typing{ align-self:flex-start; background:var(--sand); border-radius:18px; padding:12px 14px; display:flex; gap:5px; }
+.typing i{ width:7px; height:7px; border-radius:50%; background:var(--stone); animation:dot 1s infinite; }
+.typing i:nth-child(2){ animation-delay:.15s; } .typing i:nth-child(3){ animation-delay:.3s; }
+@keyframes dot{ 50%{ transform:translateY(-4px); background:var(--ink-2); } }
+
+.tool{ align-self:flex-start; max-width:86%; border:1px solid var(--line); border-left:3px solid var(--gold); background:#FFFDF8; border-radius:14px; padding:10px 12px; font-size:13px; animation:pop .35s cubic-bezier(.16,1,.3,1) both; }
+.tool .h{ display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12.5px; font-weight:700; color:var(--ink); }
+.tool .h .st{ margin-left:auto; font-family:var(--sans); font-weight:700; font-size:11.5px; color:var(--muted); display:inline-flex; align-items:center; gap:6px; }
+.tool .h .st.ok{ color:var(--ok); }
+.spin{ width:12px; height:12px; border-radius:50%; border:2px solid var(--line); border-top-color:var(--gold); animation:spin .7s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.tool pre{ margin:8px 0 0; font-family:var(--mono); font-size:12px; color:var(--ink-2); white-space:pre-wrap; background:var(--cream); border-radius:8px; padding:8px 10px; }
+
+.chips{ display:flex; flex-wrap:wrap; gap:8px; padding:4px 16px 10px; }
+.chip{ border:1px solid var(--line); background:var(--cream); border-radius:999px; padding:7px 12px; font-size:13px; cursor:pointer; transition:background .2s, border-color .2s, transform .2s; }
+.chip:hover{ background:#fff; border-color:var(--gold); transform:translateY(-1px); }
+
+.composer{ border-top:1px solid var(--line); padding:10px; display:flex; gap:8px; align-items:center; background:var(--paper); }
+.composer input{ flex:1; min-width:0; border:1px solid var(--line); background:#fff; border-radius:999px; padding:12px 16px; font:inherit; color:var(--ink); outline:none; }
+.composer input:focus{ border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-soft); }
+.ic-btn{ width:46px; height:46px; flex:none; border-radius:50%; border:1px solid var(--line); background:#fff; display:grid; place-items:center; cursor:pointer; transition:background .2s, transform .15s; }
+.ic-btn:hover{ transform:translateY(-1px); }
+.ic-btn svg{ width:20px; height:20px; }
+.ic-btn.send{ background:var(--ink); border-color:var(--ink); color:var(--cream); }
+.ic-btn.rec{ background:var(--gold); border-color:var(--gold); color:#fff; animation:recp 1.2s infinite; }
+@keyframes recp{ 0%{ box-shadow:0 0 0 0 rgba(202,156,77,.5); } 100%{ box-shadow:0 0 0 14px rgba(202,156,77,0); } }
+.wave{ flex:1; display:none; align-items:center; gap:3px; height:44px; padding:0 14px; border:1px solid var(--gold); border-radius:999px; background:#fff; color:var(--muted); font-size:13px; }
+.wave i{ width:3px; border-radius:2px; background:var(--gold); animation:bar .9s ease-in-out infinite; }
+@keyframes bar{ 0%,100%{ height:6px; } 50%{ height:24px; } }
+.composer.listening input{ display:none; } .composer.listening .wave{ display:flex; }
+
+/* Side panel */
+.side{ min-height:0; display:flex; flex-direction:column; gap:14px; overflow-y:auto; }
+.card{ background:var(--paper); border:1px solid var(--line); border-radius:22px; padding:14px 14px 10px; }
+.card h3{ margin:0 0 8px; font-family:var(--serif); font-weight:600; font-size:20px; letter-spacing:.06em; display:flex; align-items:center; gap:8px; }
+.card h3 .n{ margin-left:auto; font-family:var(--sans); font-size:12px; font-weight:700; background:var(--sand); border-radius:999px; padding:2px 9px; color:var(--ink-2); }
+.list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
+.list li{ display:flex; gap:10px; align-items:flex-start; padding:9px 2px; border-top:1px dashed var(--line); }
+.list li:first-child{ border-top:0; }
+.list li.new{ animation:hl 1.6s ease; border-radius:10px; }
+@keyframes hl{ 0%{ background:var(--gold-soft); } 100%{ background:transparent; } }
+.chk{ width:20px; height:20px; flex:none; border-radius:6px; border:1.5px solid var(--stone); background:#fff; cursor:pointer; display:grid; place-items:center; margin-top:1px; }
+.chk svg{ width:13px; height:13px; opacity:0; }
+.done .chk{ background:var(--ink); border-color:var(--ink); color:var(--cream); } .done .chk svg{ opacity:1; }
+.done .t{ text-decoration:line-through; color:var(--muted); }
+.bell{ width:20px; height:20px; flex:none; color:var(--gold); margin-top:1px; }
+.t{ font-weight:600; font-size:14px; line-height:1.35; }
+.when{ display:block; font-size:12px; color:var(--muted); font-weight:500; margin-top:2px; }
+.empty{ color:var(--muted); font-size:13px; padding:6px 2px 8px; }
+.stack{ font-size:12px; color:var(--muted); line-height:1.7; }
+.stack b{ color:var(--ink-2); }
+
+@media (max-width:860px){
+  .main{ grid-template-columns:1fr; }
+  .tabs{ display:flex; gap:6px; margin:0 18px 10px; background:var(--paper); border:1px solid var(--line); border-radius:999px; padding:4px; }
+  .tabs button{ flex:1; border:0; background:transparent; border-radius:999px; padding:8px; font-weight:700; font-size:13px; cursor:pointer; }
+  .tabs button[aria-selected="true"]{ background:var(--ink); color:var(--cream); }
+  .tabs button .n{ font-size:11px; opacity:.7; }
+  .app[data-view="chat"] .side{ display:none; }
+  .app[data-view="list"] .chat{ display:none; }
+  .app{ grid-template-rows:auto auto auto 1fr; }
+  .msg{ max-width:88%; }
+}
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation:none!important; transition:none!important; } }
+</style>
+</head>
+<body>
+<div class="sun" aria-hidden="true"></div>
+
+<div class="splash" id="splash" aria-hidden="true">
+  <img src="images/icarus-icon.png" alt="">
+  <div class="word">ICARUS</div>
+  <div class="rule"></div>
+  <div class="tag">PERSONAL AI</div>
+</div>
+
+<div class="app" id="app" data-view="chat">
+  <header>
+    <img src="images/icarus-icon.png" alt="Icarus">
+    <div class="brand"><b>ICARUS</b><span>PERSONAL AI</span></div>
+    <span class="demo-pill"><i></i><span data-t="demo">Demo</span></span>
+  </header>
+  <p class="note" data-t="note">Demo: javoblar oldindan yozilgan qoidalar asosida chiqadi, haqiqiy AI va ma'lumotlar bazasi ulanmagan.</p>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-view="chat"><span data-t="tabChat">Suhbat</span></button>
+    <button role="tab" aria-selected="false" data-view="list"><span data-t="tabList">Vazifalar</span> <span class="n" id="tabCount"></span></button>
+  </div>
+
+  <div class="main">
+    <section class="chat" aria-label="Chat">
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <div>
+        <div class="chips" id="chips"></div>
+        <form class="composer" id="composer" autocomplete="off">
+          <button type="button" class="ic-btn" id="mic" aria-label="Mikrofon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          </button>
+          <input id="input" type="text" placeholder="Xabar yozing…" aria-label="Xabar">
+          <div class="wave" id="wave" aria-hidden="true"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.25s"></i><span style="margin-left:10px" data-t="listening">Tinglanmoqda…</span></div>
+          <button type="submit" class="ic-btn send" aria-label="Yuborish">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <aside class="side">
+      <div class="card">
+        <h3><span data-t="tasks">Vazifalar</span><span class="n" id="taskCount">0</span></h3>
+        <ul class="list" id="taskList"></ul>
+      </div>
+      <div class="card">
+        <h3><span data-t="reminders">Eslatmalar</span><span class="n" id="remCount">0</span></h3>
+        <ul class="list" id="remList"></ul>
+      </div>
+      <div class="card stack">
+        <span data-t="howTitle"><b>Haqiqiy Icarus'da:</b></span><br>
+        <span data-t="how">Claude tool use → Supabase · ovoz: gpt-4o-transcribe · javob ovozi: gpt-4o-mini-tts · PWA</span>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var qs = new URLSearchParams(location.search);
+  var lang = ["uz","ru","en"].indexOf(qs.get("lang")) >= 0 ? qs.get("lang") : "uz";
+  document.documentElement.lang = lang;
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var T = {
+    uz:{ demo:"Demo", note:"Demo: javoblar oldindan yozilgan qoidalar asosida chiqadi, haqiqiy AI va ma'lumotlar bazasi ulanmagan.", tabChat:"Suhbat", tabList:"Vazifalar", tasks:"Vazifalar", reminders:"Eslatmalar", listening:"Tinglanmoqda…", placeholder:"Xabar yozing…", howTitle:"<b>Haqiqiy Icarus'da:</b>", how:"Claude tool use → Supabase · ovoz: gpt-4o-transcribe · javob ovozi: gpt-4o-mini-tts · PWA",
+      hello:"Salom! Men Icarus — shaxsiy AI yordamchingizman. Vazifa yoki eslatma ayting — o'zim tushunib, yozib qo'yaman. Mikrofonni bosib gapirsangiz ham bo'ladi.",
+      chips:["Ertaga soat 9 da mijozga qo'ng'iroq qilishni eslat","Bugun uchun vazifa: taqdimotni tayyorlash","Vazifalarim qanday?","Salom, Icarus"],
+      voice:["Indinga soat 15:00 da jamoa yig'ilishi haqida eslat","Vazifa qo'sh: shartnomani tekshirish ertaga"],
+      running:"ishlamoqda…", saved:"Supabase'ga yozildi",
+      taskDone:function(t,w){ return "Tayyor ✓ \""+t+"\" vazifasi qo'shildi"+(w?" — muddat: "+w:"")+"."; },
+      remDone:function(t,w){ return "Eslatma o'rnatildi ✓ "+w+" da eslataman: \""+t+"\"."; },
+      list:function(a,b){ return a+"\n\n"+b; }, noTasks:"Ochiq vazifalar yo'q.", noRems:"Eslatmalar yo'q.",
+      openTasks:"Ochiq vazifalar:", upcoming:"Yaqin eslatmalar:",
+      greet:"Salom! Bugun sizga qanday yordam beray? Masalan, \"ertaga soat 10 da uchrashuvni eslat\" deb ayting.",
+      fallback:"Demo rejimda men vazifa va eslatmalar bilan ishlayman. Masalan: \"Ertaga soat 9 da mijozga qo'ng'iroq qilishni eslat\" yoki \"Vazifa: hisobotni tayyorlash\".",
+      thanks:"Arzimaydi! Yana nimadir kerak bo'lsa, ayting.",
+      emptyT:"Hozircha vazifa yo'q.", emptyR:"Hozircha eslatma yo'q.", noTime:"muddatsiz",
+      seedT:["Haftalik hisobotni tayyorlash","Orbex landing matnini yangilash"], seedR:["Mentor bilan uchrashuv"] },
+    ru:{ demo:"Демо", note:"Демо: ответы строятся по заранее заданным правилам, настоящий ИИ и база данных не подключены.", tabChat:"Чат", tabList:"Задачи", tasks:"Задачи", reminders:"Напоминания", listening:"Слушаю…", placeholder:"Напишите сообщение…", howTitle:"<b>В настоящем Icarus:</b>", how:"Claude tool use → Supabase · голос: gpt-4o-transcribe · озвучка: gpt-4o-mini-tts · PWA",
+      hello:"Привет! Я Icarus — ваш личный ИИ-ассистент. Скажите задачу или напоминание — я сам пойму и запишу. Можно и голосом: нажмите на микрофон.",
+      chips:["Напомни завтра в 9 позвонить клиенту","Задача на сегодня: подготовить презентацию","Какие у меня задачи?","Привет, Icarus"],
+      voice:["Напомни послезавтра в 15:00: встреча команды","Добавь задачу: проверить договор завтра"],
+      running:"выполняется…", saved:"записано в Supabase",
+      taskDone:function(t,w){ return "Готово ✓ Задача «"+t+"» добавлена"+(w?" — срок: "+w:"")+"."; },
+      remDone:function(t,w){ return "Напоминание установлено ✓ Напомню "+w+": «"+t+"»."; },
+      list:function(a,b){ return a+"\n\n"+b; }, noTasks:"Открытых задач нет.", noRems:"Напоминаний нет.",
+      openTasks:"Открытые задачи:", upcoming:"Ближайшие напоминания:",
+      greet:"Привет! Чем помочь сегодня? Например, скажите «напомни завтра в 10 о встрече».",
+      fallback:"В демо-режиме я работаю с задачами и напоминаниями. Например: «Напомни завтра в 9 позвонить клиенту» или «Задача: подготовить отчёт».",
+      thanks:"Пожалуйста! Если что-то ещё нужно — скажите.",
+      emptyT:"Пока задач нет.", emptyR:"Пока напоминаний нет.", noTime:"без срока",
+      seedT:["Подготовить недельный отчёт","Обновить тексты лендинга Orbex"], seedR:["Встреча с ментором"] },
+    en:{ demo:"Demo", note:"Demo: replies follow pre-written rules; no real AI or database is connected.", tabChat:"Chat", tabList:"Tasks", tasks:"Tasks", reminders:"Reminders", listening:"Listening…", placeholder:"Type a message…", howTitle:"<b>In the real Icarus:</b>", how:"Claude tool use → Supabase · voice: gpt-4o-transcribe · spoken replies: gpt-4o-mini-tts · PWA",
+      hello:"Hi! I'm Icarus — your personal AI assistant. Tell me a task or a reminder and I'll work it out and save it. You can also tap the mic and speak.",
+      chips:["Remind me tomorrow at 9 to call the client","Task for today: prepare the presentation","What are my tasks?","Hi, Icarus"],
+      voice:["Remind me the day after tomorrow at 15:00: team meeting","Add a task: review the contract tomorrow"],
+      running:"running…", saved:"saved to Supabase",
+      taskDone:function(t,w){ return "Done ✓ Task \""+t+"\" added"+(w?" — due "+w:"")+"."; },
+      remDone:function(t,w){ return "Reminder set ✓ I'll remind you "+w+": \""+t+"\"."; },
+      list:function(a,b){ return a+"\n\n"+b; }, noTasks:"No open tasks.", noRems:"No reminders.",
+      openTasks:"Open tasks:", upcoming:"Upcoming reminders:",
+      greet:"Hi! How can I help today? Try \"remind me tomorrow at 10 about the meeting\".",
+      fallback:"In demo mode I handle tasks and reminders. For example: \"Remind me tomorrow at 9 to call the client\" or \"Task: prepare the report\".",
+      thanks:"You're welcome! Anything else, just say.",
+      emptyT:"No tasks yet.", emptyR:"No reminders yet.", noTime:"no deadline",
+      seedT:["Prepare the weekly report","Update the Orbex landing copy"], seedR:["Meeting with mentor"] }
+  }[lang];
+
+  document.querySelectorAll("[data-t]").forEach(function(el){ var k=el.getAttribute("data-t"); if(T[k]) el.innerHTML=T[k]; });
+  var input=document.getElementById("input"); input.placeholder=T.placeholder;
+
+  var locale = lang==="uz" ? "uz-Latn" : lang==="ru" ? "ru-RU" : "en-GB";
+  var UZM=["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentabr","oktabr","noyabr","dekabr"];
+  function fmt(d){
+    if(!d) return "";
+    var hh=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+    if(lang==="uz") return d.getDate()+"-"+UZM[d.getMonth()]+", "+hh;
+    try{ return d.toLocaleString(locale,{ day:"numeric", month:"long", hour:"2-digit", minute:"2-digit" }); }
+    catch(e){ return d.toISOString().slice(0,16).replace("T"," "); }
+  }
+
+  // ---------------- state ----------------
+  var now=new Date();
+  function at(dayOffset,h,m){ var d=new Date(now); d.setDate(d.getDate()+dayOffset); d.setHours(h,m||0,0,0); return d; }
+  var tasks=[{ id:1, title:T.seedT[0], due:at(0,18), done:false },{ id:2, title:T.seedT[1], due:null, done:true }];
+  var rems=[{ id:3, text:T.seedR[0], at:at(1,10) }];
+  var nextId=10;
+
+  var taskList=document.getElementById("taskList"), remList=document.getElementById("remList");
+  var CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>';
+  var BELL='<svg class="bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>';
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function render(newId){
+    taskList.innerHTML = tasks.length ? tasks.map(function(t){
+      return '<li class="'+(t.done?"done ":"")+(t.id===newId?"new":"")+'"><button class="chk" data-id="'+t.id+'" aria-label="✓">'+CHECK+'</button><div><span class="t">'+esc(t.title)+'</span><span class="when">'+(t.due?fmt(t.due):T.noTime)+'</span></div></li>';
+    }).join("") : '<li class="empty">'+T.emptyT+'</li>';
+    remList.innerHTML = rems.length ? rems.slice().sort(function(a,b){ return a.at-b.at; }).map(function(r){
+      return '<li class="'+(r.id===newId?"new":"")+'">'+BELL+'<div><span class="t">'+esc(r.text)+'</span><span class="when">'+fmt(r.at)+'</span></div></li>';
+    }).join("") : '<li class="empty">'+T.emptyR+'</li>';
+    var open=tasks.filter(function(t){ return !t.done; }).length;
+    document.getElementById("taskCount").textContent=open;
+    document.getElementById("remCount").textContent=rems.length;
+    document.getElementById("tabCount").textContent="("+(open+rems.length)+")";
+  }
+  taskList.addEventListener("click",function(e){
+    var b=e.target.closest(".chk"); if(!b) return;
+    var t=tasks.find(function(x){ return x.id===+b.getAttribute("data-id"); }); if(t){ t.done=!t.done; render(); }
+  });
+
+  // ---------------- chat ui ----------------
+  var msgs=document.getElementById("msgs");
+  function scroll(){ msgs.scrollTop=msgs.scrollHeight; }
+  function add(cls,text){ var d=document.createElement("div"); d.className="msg "+cls; d.textContent=text; msgs.appendChild(d); scroll(); return d; }
+  function typing(){ var d=document.createElement("div"); d.className="typing"; d.innerHTML="<i></i><i></i><i></i>"; msgs.appendChild(d); scroll(); return d; }
+  function toolCard(name,args){
+    var d=document.createElement("div"); d.className="tool";
+    d.innerHTML='<div class="h">⚙ '+name+'<span class="st"><span class="spin"></span>'+T.running+'</span></div><pre>'+esc(JSON.stringify(args,null,2))+'</pre>';
+    msgs.appendChild(d); scroll(); return d;
+  }
+  var wait=function(ms){ return new Promise(function(r){ setTimeout(r, reduce?0:ms); }); };
+
+  // ---------------- tiny "understanding" ----------------
+  function parseWhen(text){
+    var s=text.toLowerCase(), day=null, h=null, m=0, x;
+    if(/indinga|послезавтра|day after tomorrow/.test(s)) day=2;
+    else if(/ertaga|завтра|tomorrow/.test(s)) day=1;
+    else if(/bugun|сегодня|today|tonight/.test(s)) day=0;
+    if((x=s.match(/(\d{1,2})[:.](\d{2})/))){ h=+x[1]; m=+x[2]; }
+    else if((x=s.match(/(?:soat|в|at)\s*(\d{1,2})/))){ h=+x[1]; }
+    else if((x=s.match(/(\d{1,2})\s*(?:da|ga|часов|pm|am)\b/))){ h=+x[1]; if(/pm/.test(x[0]) && h<12) h+=12; }
+    if(h!=null && (h>23||m>59)) h=null;
+    if(day==null && h==null) return null;
+    var d=new Date(); d.setSeconds(0,0);
+    if(day!=null) d.setDate(d.getDate()+day);
+    if(h!=null){ d.setHours(h,m); if(day==null && d<new Date()) d.setDate(d.getDate()+1); }
+    else if(day===0){ var nh=new Date().getHours(); d.setHours(nh<17 ? 18 : Math.min(23,nh+2), 0); }
+    else d.setHours(10, 0);
+    return d;
+  }
+  // Unicode-aware word boundaries (\b does not work for Cyrillic in JS).
+  var B="(?<![\\p{L}\\p{N}'])", E="(?![\\p{L}\\p{N}'])";
+  function W(src){ return new RegExp(B+"(?:"+src+")"+E,"giu"); }
+  var STRIP=[
+    W("icarus"),
+    W("eslat(?:ib qo'y|ing)?|eslatma(?:ni)?(?: qo'y)?|напомни(?:те)?(?: мне)?|remind(?: me)?"),
+    W("vazifa qo'sh|vazifa(?:ga)?|add a task|task(?: for today| for tomorrow)?|добавь задачу|задача(?: на сегодня| на завтра)?|задачу|задачи"),
+    W("bugun uchun|ertaga uchun|bugun|ertaga|indinga|послезавтра|сегодня|завтра|the day after tomorrow|today|tomorrow|tonight"),
+    W("soat\\s*\\d{1,2}(?:[:.]\\d{2})?(?:\\s*(?:da|ga))?|в\\s*\\d{1,2}(?:[:.]\\d{2})?|at\\s*\\d{1,2}(?:[:.]\\d{2})?(?:\\s*(?:am|pm))?|\\d{1,2}[:.]\\d{2}(?:\\s*(?:da|ga))?|\\d{1,2}\\s*(?:da|ga)")
+  ];
+  function cleanTitle(text){
+    var t=text;
+    STRIP.forEach(function(re){ t=t.replace(re," "); });
+    t=t.replace(/[,:;!?]+/g," ").replace(/\s+/g," ").trim();
+    t=t.replace(/^(?:to|about|о|об|про|uchun|haqida)\s+/iu,"").replace(/\s+(?:uchun|haqida|about)$/iu,"");
+    t=t.replace(/qilishni$/u,"qilish");
+    if(t.length<3) t=text.trim();
+    return t.charAt(0).toUpperCase()+t.slice(1);
+  }
+
+  async function respond(text){
+    var s=text.toLowerCase();
+    var tp=typing(); await wait(750); tp.remove();
+
+    var isRem=/eslat|напомни|remind/.test(s);
+    var isTask=!isRem && /vazifa|task|задач|qo'sh|добавь|add /.test(s);
+    var isList=/vazifalarim|qanday vazifa|nima qilishim|мои задачи|какие у меня|my tasks|what are my|what's on/.test(s);
+    var isHi=/^(salom|assalomu|hi|hello|hey|привет|здравствуй)/.test(s.trim());
+    var isThanks=/rahmat|спасибо|thank/.test(s);
+
+    if(isList){
+      var open=tasks.filter(function(t){ return !t.done; });
+      var a=open.length ? T.openTasks+"\n"+open.map(function(t){ return "• "+t.title+(t.due?" — "+fmt(t.due):""); }).join("\n") : T.noTasks;
+      var b=rems.length ? T.upcoming+"\n"+rems.map(function(r){ return "• "+r.text+" — "+fmt(r.at); }).join("\n") : T.noRems;
+      add("ai",T.list(a,b)); return;
+    }
+    if(isRem || isTask){
+      var when=parseWhen(text);
+      var title=cleanTitle(text);
+      var name=isRem ? "create_reminder" : "create_task";
+      if(isRem && !when){ when=new Date(Date.now()+3600e3); when.setSeconds(0,0); }
+      var iso=function(d){ var p=function(n){ return String(n).padStart(2,"0"); }; return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes())+":00"; };
+      var args=isRem ? { message:title, remind_at: iso(when) } : { title:title, due_at: when ? iso(when) : null };
+      var card=toolCard(name,args);
+      await wait(900);
+      var st=card.querySelector(".st"); st.className="st ok"; st.innerHTML="✓ "+T.saved;
+      var id=++nextId;
+      if(isRem) rems.push({ id:id, text:title, at:when }); else tasks.unshift({ id:id, title:title, due:when, done:false });
+      render(id);
+      var tp2=typing(); await wait(500); tp2.remove();
+      add("ai", isRem ? T.remDone(title, fmt(when)) : T.taskDone(title, when ? fmt(when) : ""));
+      return;
+    }
+    if(isThanks){ add("ai",T.thanks); return; }
+    if(isHi){ add("ai",T.greet); return; }
+    add("ai",T.fallback);
+  }
+
+  var busy=false;
+  async function send(text){
+    text=(text||"").trim(); if(!text||busy) return;
+    busy=true; add("me",text); input.value="";
+    try{ await respond(text); } finally{ busy=false; }
+  }
+  document.getElementById("composer").addEventListener("submit",function(e){ e.preventDefault(); send(input.value); });
+
+  var chips=document.getElementById("chips");
+  T.chips.forEach(function(c){ var b=document.createElement("button"); b.type="button"; b.className="chip"; b.textContent=c; b.onclick=function(){ send(c); }; chips.appendChild(b); });
+
+  // Simulated voice input: records for ~2s, then "transcribes" a sample phrase.
+  var mic=document.getElementById("mic"), composer=document.getElementById("composer"), vi=0;
+  mic.addEventListener("click",async function(){
+    if(busy || composer.classList.contains("listening")) return;
+    composer.classList.add("listening"); mic.classList.add("rec");
+    await wait(2000);
+    composer.classList.remove("listening"); mic.classList.remove("rec");
+    var phrase=T.voice[vi++ % T.voice.length];
+    input.value=""; for(var i=1;i<=phrase.length;i++){ input.value=phrase.slice(0,i); await wait(12); }
+    await wait(250); send(phrase);
+  });
+
+  // Mobile tabs
+  document.querySelectorAll(".tabs button").forEach(function(b){
+    b.addEventListener("click",function(){
+      document.getElementById("app").setAttribute("data-view",b.getAttribute("data-view"));
+      document.querySelectorAll(".tabs button").forEach(function(x){ x.setAttribute("aria-selected",String(x===b)); });
+    });
+  });
+
+  render();
+  setTimeout(function(){
+    document.getElementById("splash").classList.add("hide");
+    setTimeout(function(){ add("ai",T.hello); },300);
+  }, reduce?0:1600);
+})();
+</script>
+</body>
+</html>

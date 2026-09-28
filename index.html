@@ -1,0 +1,1648 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diyorbek Nosirov — Loyiha menejeri, sotuv tizimlari, vibecoder</title>
+<meta name="description" content="Diyorbek Nosirov: loyiha menejeri (PM), sotuv bo‘limlarini noldan quruvchi va AI yordamida mahsulot yaratuvchi vibecoder. Tajriba, loyihalar va sertifikatlar.">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#06182a" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Diyorbek Nosirov — PM · Sales systems · Vibecoder">
+<meta property="og:description" content="Loyiha menejeri (PM) · Sotuv tizimlarini qurish va raqamlashtirish · Vibecoder">
+<meta property="og:image" content="images/profile.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Sora + Plus Jakarta Sans (as in the reference); Manrope covers Cyrillic glyphs for the RU version -->
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<script>
+document.documentElement.classList.add('js');
+/* Missing images become labelled placeholders. Registered early so no error event is missed. */
+document.addEventListener('error', function (e) {
+  var t = e.target;
+  if (t && t.tagName === 'IMG') {
+    var p = t.closest('[data-img]');
+    if (p) { p.classList.add('is-missing'); p.setAttribute('aria-disabled', 'true'); }
+  }
+}, true);
+</script>
+<style>
+:root{
+  color-scheme: light dark;
+  --sky-950:#07253d; --sky-900:#0a3050; --sky-800:#0f4671; --sky-700:#155f96; --sky-600:#1f7fbf;
+  --sky-500:#2e9be6; --sky-400:#59b4ee; --sky-300:#8fcef5; --sky-200:#c2e4fa; --sky-100:#e6f3fd; --sky-50:#f2f9fe;
+  --bg:#ffffff; --bg-alt:#f2f9fe; --surface:#ffffff;
+  --ink:#0c2233; --heading:#07253d; --text:#33495b; --muted:#5a7286; --line:#dbeafc;
+  --chip-bg:#e6f3fd; --chip-bg-2:#c2e4fa; --chip-ink:#155f96; --accent:#1f7fbf; --accent-strong:#0f4671;
+  --nav-bg:rgba(255,255,255,.74);
+  --shadow-sm:0 1px 2px rgba(10,48,80,.06),0 8px 24px rgba(10,48,80,.06);
+  --shadow-md:0 10px 40px rgba(15,70,113,.14);
+  --shadow-lg:0 24px 70px rgba(15,70,113,.22);
+  --grad:linear-gradient(120deg,#1f7fbf,#59b4ee 55%,#37c6e8);
+  --r-lg:26px; --r-md:18px; --r-sm:12px;
+  --font-display:"Sora","Manrope","Segoe UI",system-ui,sans-serif;
+  --font-body:"Plus Jakarta Sans","Manrope","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --font-mono:ui-monospace,"SFMono-Regular","JetBrains Mono",Menlo,Consolas,monospace;
+  --gutter:20px;
+  --header-h:118px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#06182a; --bg-alt:#081f36; --surface:#0c2740;
+    --ink:#e6f3fd; --heading:#f2f9fe; --text:#c4d9ea; --muted:#8fb1c9; --line:#17405f;
+    --chip-bg:#0f3553; --chip-bg-2:#15466d; --chip-ink:#8fcef5; --accent:#59b4ee; --accent-strong:#8fcef5;
+    --nav-bg:rgba(6,24,42,.74);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+    --shadow-md:0 10px 40px rgba(0,0,0,.4);
+    --shadow-lg:0 24px 70px rgba(0,0,0,.5);
+  }
+}
+@media (min-width:760px){ :root{ --gutter:28px; } }
+@media (min-width:960px){ :root{ --header-h:72px; } }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; scrollbar-gutter:stable; -webkit-text-size-adjust:100%; scroll-padding-top:calc(var(--header-h) + env(safe-area-inset-top) + 8px); }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+h1,h2,h3,h4{ font-family:var(--font-display); letter-spacing:-.02em; line-height:1.12; margin:0; color:var(--heading); }
+p{ margin:0; }
+ul,ol{ margin:0; padding:0; list-style:none; }
+:focus-visible{ outline:2.5px solid var(--sky-500); outline-offset:3px; border-radius:6px; }
+.wrap{ max-width:1160px; margin:0 auto; padding-left:max(var(--gutter), env(safe-area-inset-left)); padding-right:max(var(--gutter), env(safe-area-inset-right)); }
+.skip{ position:absolute; left:12px; top:-60px; z-index:100; background:var(--sky-800); color:#fff; padding:10px 16px; border-radius:10px; font-weight:700; }
+.skip:focus{ top:calc(12px + env(safe-area-inset-top)); }
+svg.i{ width:20px; height:20px; flex:none; }
+
+/* ---------- Buttons ---------- */
+.btn{ display:inline-flex; align-items:center; gap:8px; font:inherit; font-weight:700; font-size:14.5px; padding:11px 20px; border-radius:999px; border:0; cursor:pointer; transition:transform .18s, box-shadow .25s, background .25s, color .25s; white-space:nowrap; }
+.btn-primary{ background:var(--grad); color:#fff; box-shadow:0 10px 24px rgba(46,155,230,.38); }
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 16px 34px rgba(46,155,230,.5); }
+.btn-ghost{ background:var(--chip-bg); color:var(--chip-ink); }
+.btn-ghost:hover{ background:var(--chip-bg-2); transform:translateY(-2px); }
+.btn-lg{ padding:14px 26px; font-size:15.5px; }
+.btn svg{ width:18px; height:18px; transition:transform .2s; }
+.btn:hover svg.arrow{ transform:translateX(3px); }
+
+/* ---------- Header ---------- */
+.site-header{ position:sticky; top:0; z-index:50; background:var(--nav-bg); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border-bottom:1px solid transparent; padding-top:env(safe-area-inset-top); transition:border-color .3s, box-shadow .3s; }
+.site-header.scrolled{ border-color:var(--line); box-shadow:0 6px 24px rgba(15,70,113,.07); }
+.header-inner{ display:grid; grid-template-columns:1fr auto; grid-template-areas:"brand right" "nav nav"; align-items:center; column-gap:14px; }
+.brand{ grid-area:brand; display:flex; align-items:center; gap:11px; font-family:var(--font-display); font-weight:800; font-size:17px; color:var(--heading); padding:12px 0 6px; min-width:0; }
+.brand .dot{ width:36px; height:36px; border-radius:11px; background:var(--grad); display:grid; place-items:center; color:#fff; font-size:14px; box-shadow:0 6px 16px rgba(46,155,230,.4); flex:none; }
+.brand .nm{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.nav{ grid-area:nav; overflow-x:auto; scrollbar-width:none; margin:0 calc(-1 * var(--gutter)); padding:0 var(--gutter); }
+.nav::-webkit-scrollbar{ display:none; }
+.nav ul{ display:flex; gap:22px; padding:6px 0 12px; }
+.nav a{ position:relative; display:block; font-size:14.5px; font-weight:600; color:var(--sky-900); opacity:.75; white-space:nowrap; transition:opacity .2s; }
+@media (prefers-color-scheme: dark){ .nav a{ color:var(--sky-200); } }
+.nav a::after{ content:""; position:absolute; left:0; bottom:-6px; height:2px; width:0; background:var(--grad); border-radius:2px; transition:width .25s; }
+.nav a:hover, .nav a[aria-current="true"]{ opacity:1; }
+.nav a:hover::after, .nav a[aria-current="true"]::after{ width:100%; }
+.header-right{ grid-area:right; display:flex; align-items:center; gap:12px; }
+.lang{ display:flex; background:var(--chip-bg); border-radius:999px; padding:3px; }
+.lang button{ font:inherit; font-weight:800; font-size:12px; letter-spacing:.04em; background:transparent; color:var(--chip-ink); border:0; cursor:pointer; min-width:38px; min-height:32px; border-radius:999px; transition:background .25s, color .25s, box-shadow .25s; }
+.lang button[aria-pressed="true"]{ background:var(--surface); color:var(--heading); box-shadow:0 2px 8px rgba(15,70,113,.14); }
+.header-cta{ display:none; }
+@media (min-width:960px){
+  .header-inner{ grid-template-columns:auto 1fr auto; grid-template-areas:"brand nav right"; height:72px; }
+  .brand{ padding:0; }
+  .nav{ margin:0; padding:0; justify-self:center; }
+  .nav ul{ gap:28px; padding:0; }
+  .header-cta{ display:inline-flex; }
+}
+
+/* ---------- Hero ---------- */
+.hero{ position:relative; padding:44px 0 36px; overflow:hidden; isolation:isolate; }
+.hero::before{ content:""; position:absolute; inset:0; z-index:-2;
+  background:radial-gradient(120% 90% at 100% -10%, var(--sky-100) 0%, transparent 55%),
+             radial-gradient(90% 70% at -10% 0%, var(--sky-50) 0%, transparent 60%),
+             linear-gradient(180deg, var(--bg-alt) 0%, var(--bg) 70%); }
+@media (prefers-color-scheme: dark){ .hero::before{ background:radial-gradient(120% 90% at 100% -10%, #0f3553 0%, transparent 55%), radial-gradient(90% 70% at -10% 0%, #0a2742 0%, transparent 60%), linear-gradient(180deg,#081f36 0%, var(--bg) 70%); } }
+.hero-blob{ position:absolute; border-radius:50%; filter:blur(60px); z-index:-1; opacity:.55; pointer-events:none; animation:drift 14s ease-in-out infinite alternate; }
+.b1{ width:420px; height:420px; background:radial-gradient(circle,#bfe3fb,transparent 70%); top:-120px; right:-80px; }
+.b2{ width:340px; height:340px; background:radial-gradient(circle,#d6f2fb,transparent 70%); bottom:-140px; left:-120px; animation-delay:-6s; }
+@media (prefers-color-scheme: dark){ .b1{ background:radial-gradient(circle,#155f96,transparent 70%); opacity:.35; } .b2{ background:radial-gradient(circle,#0f4671,transparent 70%); opacity:.4; } }
+@keyframes drift{ to{ transform:translate(-30px, 24px) scale(1.08); } }
+.hero-grid{ display:grid; gap:36px; align-items:center; }
+.hero-grid > *{ min-width:0; }
+.pill{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.tag{ font-size:12.5px; font-weight:700; padding:6px 13px; border-radius:999px; background:var(--surface); border:1px solid var(--line); color:var(--chip-ink); box-shadow:var(--shadow-sm); }
+h1.name{ font-size:clamp(42px, 9.5vw, 76px); font-weight:800; line-height:1.02; }
+.name .line{ display:block; overflow:hidden; padding-bottom:.08em; margin-bottom:-.08em; }
+.name .line > span{ display:block; }
+.grad-text{ background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.role{ font-size:clamp(16.5px, 2.2vw, 20px); font-weight:700; color:var(--sky-700); margin-top:14px; max-width:34em; }
+@media (prefers-color-scheme: dark){ .role{ color:var(--sky-300); } }
+.loc{ display:inline-flex; align-items:center; gap:7px; color:var(--muted); font-weight:600; font-size:15px; margin-top:14px; }
+.loc svg{ width:18px; height:18px; color:var(--accent); }
+.lead{ font-size:17px; color:var(--text); max-width:36em; margin-top:16px; }
+.hero-cta{ display:flex; flex-wrap:wrap; gap:12px; margin-top:26px; }
+.socials{ display:flex; gap:12px; margin-top:22px; }
+.soc{ width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow-sm); color:var(--chip-ink); transition:transform .18s, color .2s, box-shadow .25s; }
+.soc:hover{ transform:translateY(-3px); color:var(--sky-500); box-shadow:var(--shadow-md); }
+.avatar-wrap{ position:relative; justify-self:center; width:min(320px, 74vw); order:-1; }
+.avatar-ring{ position:relative; border-radius:50%; padding:9px; background:conic-gradient(from 140deg,#59b4ee,#37c6e8,#1f7fbf,#8fcef5,#2e9be6); box-shadow:var(--shadow-lg); animation:spin 16s linear infinite; }
+.avatar-ring::after{ content:""; position:absolute; inset:9px; border-radius:50%; box-shadow:inset 0 0 0 6px var(--bg); pointer-events:none; }
+.avatar-ring img{ width:100%; height:auto; aspect-ratio:1/1; object-fit:cover; object-position:center 18%; border-radius:50%; animation:spin 16s linear infinite reverse; background:var(--chip-bg); }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.badge-float{ position:absolute; background:var(--surface); border-radius:16px; padding:11px 14px; box-shadow:var(--shadow-md); border:1px solid var(--line); display:flex; align-items:center; gap:11px; }
+.badge-float .ic{ width:34px; height:34px; border-radius:10px; background:var(--grad); display:grid; place-items:center; color:#fff; flex:none; }
+.badge-float .ic svg{ width:18px; height:18px; }
+.badge-float b{ font-family:var(--font-display); font-size:15px; color:var(--heading); display:block; line-height:1.1; }
+.badge-float span{ font-size:11.5px; color:var(--muted); font-weight:600; }
+.bf-1{ bottom:14px; left:-22px; animation:float 5s ease-in-out infinite; }
+.bf-2{ top:18px; right:-24px; animation:float 5s ease-in-out .8s infinite; }
+@keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
+@media (max-width:420px){ .bf-1{ left:-8px; } .bf-2{ right:-8px; } }
+.metrics{ margin-top:40px; display:grid; gap:14px; }
+.metric{ background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:22px 22px 22px 26px; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; transition:transform .22s, box-shadow .28s; }
+.metric:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); }
+.metric::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--grad); }
+.metric .num{ font-family:var(--font-display); font-weight:800; font-size:38px; color:var(--sky-800); line-height:1; font-variant-numeric:tabular-nums; }
+@media (prefers-color-scheme: dark){ .metric .num{ color:var(--sky-300); } }
+.metric .lbl{ font-size:14px; color:var(--muted); font-weight:600; margin-top:9px; }
+@media (min-width:600px){ .metrics{ grid-template-columns:repeat(3,1fr); gap:18px; } }
+@media (min-width:940px){
+  .hero{ padding:64px 0 44px; }
+  .hero-grid{ grid-template-columns:1.35fr .9fr; gap:48px; }
+  .avatar-wrap{ order:0; width:340px; }
+  .metrics{ margin-top:52px; }
+}
+
+/* ---------- Sections ---------- */
+.sec{ padding:72px 0; }
+.sec.alt{ background:var(--bg-alt); }
+.sec-head{ max-width:680px; margin-bottom:40px; }
+.eyebrow{ font-size:12.5px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); display:inline-flex; align-items:center; gap:10px; }
+.eyebrow::before{ content:""; width:26px; height:2px; border-radius:2px; background:var(--grad); }
+.sec-head h2{ font-size:clamp(28px, 4.5vw, 42px); font-weight:800; margin-top:14px; }
+.sec-head p{ color:var(--muted); font-size:16.5px; margin-top:12px; }
+@media (min-width:940px){ .sec{ padding:96px 0; } }
+
+/* ---------- Featured role ---------- */
+.featured{ position:relative; border-radius:var(--r-lg); overflow:hidden; margin-bottom:48px; background:linear-gradient(135deg,#0f4671,#1f7fbf 60%,#2eb6d8); color:#fff; box-shadow:var(--shadow-lg); isolation:isolate; }
+.featured::after{ content:""; position:absolute; z-index:-1; width:360px; height:360px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.2),transparent 70%); top:-140px; right:-80px; animation:drift 12s ease-in-out infinite alternate; }
+.featured-in{ display:grid; gap:26px; padding:30px 24px; }
+.featured .lab{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:#d6f1ff; display:inline-flex; align-items:center; gap:9px; }
+.featured .lab::before{ content:""; width:22px; height:2px; background:#fff; border-radius:2px; }
+.featured h3{ color:#fff; font-size:clamp(22px, 3.4vw, 29px); font-weight:800; margin:14px 0 6px; }
+.featured .sub{ color:#d9f0ff; font-weight:600; font-size:15px; }
+.featured .sub .when{ opacity:.85; }
+.featured ul{ margin-top:18px; display:grid; gap:11px; }
+.featured li{ position:relative; padding-left:28px; color:#eaf7ff; font-size:15px; }
+.featured li::before{ content:""; position:absolute; left:0; top:5px; width:15px; height:15px; border-radius:5px; background:rgba(255,255,255,.22); box-shadow:inset 0 0 0 2px rgba(255,255,255,.55); }
+.featured-side{ display:flex; flex-wrap:wrap; gap:22px 30px; border-top:1px solid rgba(255,255,255,.22); padding-top:22px; }
+.fstat b{ font-family:var(--font-display); font-size:30px; display:block; line-height:1; }
+.fstat span{ font-size:13px; color:#cfeeff; display:block; margin-top:6px; max-width:15em; }
+@media (min-width:940px){
+  .featured-in{ grid-template-columns:1fr 280px; gap:30px; padding:40px 44px; }
+  .featured-side{ flex-direction:column; justify-content:center; border-top:0; padding-top:0; border-left:1px solid rgba(255,255,255,.22); padding-left:30px; gap:18px; }
+}
+
+/* ---------- Timeline ---------- */
+.tl{ position:relative; }
+.tl-item{ position:relative; display:grid; grid-template-columns:1fr; padding-bottom:16px; }
+.tl-meta{ display:none; }
+.tl-date{ font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--sky-800); }
+@media (prefers-color-scheme: dark){ .tl-date{ color:var(--sky-300); } }
+.tl-type{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:.06em; padding:4px 10px; border-radius:999px; background:var(--chip-bg); color:var(--chip-ink); }
+.tl-type.sales{ background:rgba(18,124,134,.12); color:#127c86; }
+@media (prefers-color-scheme: dark){ .tl-type.sales{ background:rgba(76,195,224,.14); color:#7fdbe9; } }
+.tl-body{ position:relative; }
+.tl-body::before{ content:""; position:absolute; left:0; top:0; bottom:-16px; width:2px; background:var(--line); }
+.tl-item:last-child .tl-body::before{ bottom:0; background:linear-gradient(var(--line), transparent); }
+.tl-node{ position:absolute; left:-8px; top:24px; width:18px; height:18px; border-radius:50%; background:var(--surface); border:3px solid var(--sky-400); box-shadow:0 0 0 5px var(--bg), 0 6px 14px rgba(46,155,230,.35); z-index:3; transition:background .4s, border-color .4s, transform .5s cubic-bezier(.16,1,.3,1); }
+.sec.alt .tl-node{ box-shadow:0 0 0 5px var(--bg-alt), 0 6px 14px rgba(46,155,230,.35); }
+.tl-item.passed .tl-node{ background:var(--grad); border-color:#fff; transform:scale(1.12); }
+.tl-card{ margin-left:26px; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:20px 22px; box-shadow:var(--shadow-sm); transition:transform .22s, box-shadow .28s, border-color .2s; }
+.tl-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); border-color:var(--sky-200); }
+.tl-mobile-date{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:10px; }
+.tl-card h3{ font-size:18px; }
+.org{ font-size:14px; font-weight:700; color:var(--accent); margin-top:4px; }
+.bul{ margin-top:12px; display:grid; gap:8px; }
+.bul li{ position:relative; padding-left:22px; font-size:15px; color:var(--text); }
+.bul li::before{ content:""; position:absolute; left:2px; top:9px; width:8px; height:8px; border-radius:3px; background:var(--sky-400); }
+.bul li b{ color:var(--heading); font-weight:700; }
+.js .tl::before{ content:""; position:absolute; left:0; top:var(--t,33px); width:2px; height:var(--h,0px); background:var(--grad); transform-origin:top; transform:scaleY(var(--p,0)); z-index:2; border-radius:2px; }
+@media (min-width:720px){
+  .tl-item{ grid-template-columns:170px 1fr; }
+  .tl-meta{ display:block; padding:20px 26px 6px 0; text-align:right; }
+  .tl-meta .tl-type{ margin-top:8px; }
+  .tl-mobile-date{ display:none; }
+  .tl-card{ margin-left:30px; padding:22px 26px; }
+  .js .tl::before{ left:170px; }
+}
+
+/* ---------- Projects ---------- */
+.projects{ display:grid; gap:22px; }
+@media (min-width:940px){ .projects{ grid-template-columns:1fr 1fr; } .project.wide{ grid-column:1 / -1; } }
+.project{
+  position:relative; isolation:isolate; overflow:hidden; display:flex; flex-direction:column;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:24px; box-shadow:var(--shadow-sm);
+  transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .35s, border-color .35s;
+  --pc:#1f7fbf; --glow-a:.16;
+}
+.project[data-color="violet"]{ --pc:#6d4aff; }
+.project[data-color="green"]{ --pc:#2e8540; }
+.project[data-color="orange"]{ --pc:#d0661a; }
+.project[data-color="red"]{ --pc:#d24636; }
+@media (prefers-color-scheme: dark){
+  .project{ --pc:#59b4ee; --glow-a:.24; }
+  .project[data-color="violet"]{ --pc:#a38cff; }
+  .project[data-color="green"]{ --pc:#6fcf82; }
+  .project[data-color="orange"]{ --pc:#f3a15e; }
+  .project[data-color="red"]{ --pc:#ff8a7a; }
+}
+.project::before{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(560px circle at var(--mx,20%) var(--my,20%), var(--pc), transparent 70%),
+             radial-gradient(700px circle at 100% 100%, var(--pc), transparent 60%);
+  opacity:0; transition:opacity .8s cubic-bezier(.16,1,.3,1);
+}
+.project::after{ content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--pc); transform:scaleY(0); transform-origin:top; transition:transform .8s cubic-bezier(.16,1,.3,1); }
+.project.is-active, .project:hover{ border-color:var(--pc); box-shadow:0 18px 50px -12px var(--pc); }
+.project:hover{ transform:translateY(-4px); }
+.project.is-active::before, .project:hover::before, .project:focus-within::before{ opacity:var(--glow-a); }
+.project.is-active::after, .project:hover::after{ transform:scaleY(1); }
+.project.is-launching::before{ opacity:calc(var(--glow-a) * 2.2); transition-duration:.35s; }
+@media (min-width:760px){ .project{ padding:30px; } }
+.work-top{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+.work-ic{ width:46px; height:46px; border-radius:13px; background:var(--chip-bg); color:var(--pc); display:grid; place-items:center; font-family:var(--font-display); font-weight:800; font-size:15px; transition:background .4s, color .4s; }
+.project.is-active .work-ic, .project:hover .work-ic{ background:var(--pc); color:#fff; }
+.work-tag{ font-size:11.5px; font-weight:800; letter-spacing:.05em; padding:5px 12px; border-radius:999px; background:var(--chip-bg); color:var(--chip-ink); }
+.project h3{ font-size:clamp(20px, 3vw, 26px); font-weight:800; }
+.p-sub{ margin-top:6px; font-weight:600; color:var(--muted); font-size:15px; }
+.project .bul{ margin-top:16px; }
+.p-facts{ margin:18px 0 0; display:flex; flex-wrap:wrap; gap:10px; }
+.p-facts > div{ background:var(--chip-bg); border-radius:14px; padding:10px 16px; }
+.p-facts dt{ font-family:var(--font-display); font-weight:800; font-size:22px; line-height:1.1; color:var(--pc); }
+.p-facts dd{ margin:2px 0 0; font-size:12.5px; font-weight:700; color:var(--muted); }
+.stack{ margin-top:16px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.stack .lbl{ font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-right:4px; }
+.stack .t{ font-family:var(--font-mono); font-size:12.5px; padding:4px 10px; border-radius:8px; background:var(--bg-alt); border:1px solid var(--line); color:var(--text); }
+.plinks{ margin-top:18px; display:flex; flex-wrap:wrap; gap:10px; }
+.plink{ display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:999px; font-weight:700; font-size:14px; background:var(--chip-bg); color:var(--chip-ink); transition:transform .18s, background .25s; }
+.plink:hover{ background:var(--chip-bg-2); transform:translateY(-2px); }
+.plink.main{ background:var(--grad); color:#fff; box-shadow:0 8px 20px rgba(46,155,230,.35); }
+.plink:not([href]), .plink[href=""], .plink[href="#"]{ display:none; }
+.plinks:not(:has(.plink[href]:not([href=""]):not([href="#"]))){ display:none; }
+
+.shots{ margin-top:20px; display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:10px; }
+.shot, .doc{ position:relative; display:block; width:100%; padding:0; margin:0; background:var(--bg-alt); border:1px solid var(--line); border-radius:12px; cursor:zoom-in; font:inherit; color:inherit; overflow:hidden; transition:transform .25s, box-shadow .25s, border-color .25s; }
+.shot{ aspect-ratio:16/10; }
+.shot:hover, .doc:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:var(--sky-300); }
+.shot img, .doc img{ width:100%; height:100%; object-fit:cover; object-position:top center; }
+.ph-label{ display:none; }
+[data-img].is-missing{ cursor:default; border:1.5px dashed var(--sky-300); background:var(--bg-alt); transform:none!important; box-shadow:none!important; }
+[data-img].is-missing img{ visibility:hidden; }
+[data-img].is-missing .ph-label{ display:flex; flex-direction:column; justify-content:center; align-items:center; gap:6px; position:absolute; inset:0; padding:10px; text-align:center; color:var(--muted); font-size:12px; font-weight:700; }
+.ph-label code{ font-family:var(--font-mono); font-size:11px; color:var(--heading); word-break:break-all; }
+
+.more{ margin-top:14px; display:grid; gap:12px; }
+.more li{ padding:14px 16px; border-radius:14px; background:var(--bg-alt); border:1px solid var(--line); }
+.more h4{ font-size:15.5px; }
+.more p{ margin-top:4px; color:var(--text); font-size:14.5px; }
+.more .stack{ margin-top:8px; }
+
+/* Live previews */
+.lives{ margin-top:22px; display:grid; gap:16px; }
+@media (min-width:760px){ .lives.two{ grid-template-columns:1fr 1fr; } .lives:not(.two){ max-width:820px; } }
+.live{ margin:0; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow-sm); transition:border-color .5s, transform .5s cubic-bezier(.16,1,.3,1), box-shadow .5s; }
+.project.is-active .live, .live:hover{ border-color:var(--pc); }
+.live:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.live-bar{ display:flex; align-items:center; gap:10px; padding:9px 14px; border-bottom:1px solid var(--line); font-size:12.5px; font-weight:700; color:var(--muted); background:var(--bg-alt); }
+.live-dots{ display:flex; gap:5px; flex:none; }
+.live-dots i{ display:block; width:9px; height:9px; border-radius:50%; background:#ff5f57; }
+.live-dots i:nth-child(2){ background:#febc2e; } .live-dots i:nth-child(3){ background:#28c840; }
+.live-url{ flex:1; min-width:0; font-family:var(--font-mono); color:var(--heading); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; background:var(--surface); border-radius:8px; padding:3px 10px; }
+.live-badge{ display:inline-flex; align-items:center; gap:6px; color:#1a9a4a; font-weight:800; flex:none; }
+@media (prefers-color-scheme: dark){ .live-badge{ color:#5fe08f; } }
+.live-badge::before{ content:""; width:7px; height:7px; border-radius:50%; background:currentColor; animation:pulse 2.2s ease-out infinite; }
+@keyframes pulse{ 0%{ box-shadow:0 0 0 0 currentColor; } 70%,100%{ box-shadow:0 0 0 7px transparent; } }
+.live-view{ position:relative; aspect-ratio:16/10; overflow:hidden; background:var(--bg-alt); }
+.live-view::before{ content:""; position:absolute; inset:0; background:linear-gradient(100deg, transparent 30%, rgba(89,180,238,.18) 50%, transparent 70%) var(--bg-alt); background-size:220% 100%; animation:shimmer 1.4s linear infinite; }
+@keyframes shimmer{ from{ background-position:120% 0; } to{ background-position:-120% 0; } }
+.live-view.loaded::before{ display:none; }
+.live-view iframe{ position:absolute; top:0; left:0; z-index:1; width:1280px; height:800px; border:0; background:#fff; transform-origin:0 0; transform:scale(var(--s,.3)); pointer-events:none; opacity:0; transition:opacity .6s; }
+.live-view.loaded iframe{ opacity:1; }
+.live-hit{ position:absolute; inset:0; z-index:2; width:100%; padding:0; border:0; margin:0; cursor:pointer; background:transparent; font:inherit; display:flex; align-items:flex-end; justify-content:flex-end; }
+.live-hit:focus-visible{ outline-offset:-4px; }
+.live-cta{ margin:12px; padding:10px 16px; border-radius:999px; background:var(--grad); color:#fff; font-weight:800; font-size:13.5px; box-shadow:0 10px 24px rgba(46,155,230,.45); opacity:0; transform:translateY(8px); transition:opacity .45s, transform .45s cubic-bezier(.16,1,.3,1); }
+.live-hit:hover .live-cta, .live-hit:focus-visible .live-cta, .project.is-active .live-cta{ opacity:1; transform:none; }
+@media (hover:none){ .live-cta{ opacity:1; transform:none; } }
+.live-note{ padding:10px 14px; border-top:1px solid var(--line); font-size:13px; color:var(--muted); font-weight:600; }
+
+
+/* ---------- Brand takeover: Orbex & Deep AI cards adopt their product's look when in focus ---------- */
+.brand-layer{ position:absolute; inset:0; z-index:-2; opacity:0; pointer-events:none; transition:opacity .8s cubic-bezier(.16,1,.3,1); border-radius:inherit; }
+.project[data-brand="orbex"] .brand-layer{
+  background:linear-gradient(90deg,#FF6B3D,#C24B29) top/100% 3px no-repeat,
+             radial-gradient(900px circle at 100% 0%, rgba(255,107,61,.12), transparent 60%),
+             linear-gradient(180deg,#0B1420,#0E1A29);
+}
+.project[data-brand="deepai"] .brand-layer{
+  background:linear-gradient(90deg,#4338CA,#6D5BD6) top/100% 6px no-repeat,
+             linear-gradient(150deg,#F8F9FF,#FFFFFF 60%);
+}
+.project[data-brand]:is(.is-active,:hover,:focus-within) .brand-layer{ opacity:1; }
+.project[data-brand="orbex"]:is(.is-active,:hover,:focus-within){
+  --surface:#101E2E; --bg-alt:#152738; --heading:#FFFFFF; --text:#EFEAE0; --muted:#8CA0B3; --line:#223449;
+  --chip-bg:#152738; --chip-bg-2:#1C3349; --chip-ink:#FF6B3D; --accent:#FF6B3D; --pc:#FF6B3D; --glow-a:.14;
+  --grad:linear-gradient(120deg,#FF6B3D,#FF8A5C); --sky-400:#FF6B3D; --sky-300:#C24B29;
+  background-color:#0B1420;
+}
+.project[data-brand="deepai"]:is(.is-active,:hover,:focus-within){
+  --surface:#FFFFFF; --bg-alt:#F8F9FF; --heading:#111827; --text:#374151; --muted:#6B7280; --line:#E5E7EB;
+  --chip-bg:#EEF0FF; --chip-bg-2:#E0E3FF; --chip-ink:#4338CA; --accent:#4338CA; --pc:#4338CA; --glow-a:.1;
+  --grad:linear-gradient(120deg,#4338CA,#6D5BD6); --sky-400:#4F46E5; --sky-300:#A5B4FC;
+  background-color:#FBFBFD;
+}
+.project[data-brand] :is(h3,h4,p,li,dt,dd,b,.org,.p-sub,.stack .lbl,.work-tag,.live-note,.live-url){ transition:color .6s ease, background-color .6s ease, border-color .6s ease; }
+.project[data-brand]{ transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .5s, border-color .5s, background-color .6s; }
+.project[data-brand] .stack .t, .project[data-brand] .p-facts > div, .project[data-brand] .live-bar{ transition:color .6s, background-color .6s, border-color .6s; }
+.project[data-brand] .live{ transition:border-color .5s, transform .5s cubic-bezier(.16,1,.3,1), box-shadow .5s, background-color .6s; }
+.project[data-brand] .bul li::before{ transition:background-color .6s; }
+.project[data-brand] .plink{ transition:transform .18s, background .6s, color .6s; }
+
+
+/* Icarus: cream paper, ink leaves, golden sun */
+.project[data-brand="icarus"] .brand-layer{
+  background:radial-gradient(circle at 94% 6%, rgba(202,156,77,.55) 0 22px, rgba(202,156,77,.22) 70px, rgba(202,156,77,0) 190px),
+             linear-gradient(180deg,#F3EEE4,#EFE8DA);
+}
+.project[data-brand="icarus"]:is(.is-active,:hover,:focus-within){
+  --surface:#F8F4EC; --bg-alt:#E9E1D2; --heading:#2B2823; --text:#4A463F; --muted:#8C877C; --line:#D8CFBE;
+  --chip-bg:#E9E1D2; --chip-bg-2:#DDD3C0; --chip-ink:#2B2823; --accent:#A97B2F; --pc:#CA9C4D; --glow-a:.12;
+  --grad:linear-gradient(120deg,#2B2823,#4A463F); --sky-400:#CA9C4D; --sky-300:#A39F97;
+  background-color:#F3EEE4;
+}
+.project[data-brand="icarus"] h3{ transition:letter-spacing .6s ease, color .6s ease; }
+.project[data-brand="icarus"]:is(.is-active,:hover,:focus-within) h3{ font-family:"Cormorant Garamond", Georgia, serif; font-weight:600; letter-spacing:.3em; text-transform:uppercase; }
+.project[data-brand="icarus"]:is(.is-active,:hover,:focus-within) .work-ic{ background:#F3EEE4; box-shadow:inset 0 0 0 1px #D8CFBE, 0 0 24px rgba(202,156,77,.45); }
+.project[data-brand="icarus"] .live-badge{ color:#A97B2F; }
+.project code{ font-family:var(--font-mono); font-size:.88em; background:var(--bg-alt); padding:1px 5px; border-radius:5px; }
+.demo[data-brand="icarus"]{ --bg:#F3EEE4; --nav-bg:rgba(243,238,228,.92); --chip-bg:#E9E1D2; --chip-bg-2:#DDD3C0; --chip-ink:#2B2823; --muted:#8C877C; --line:#D8CFBE; --grad:linear-gradient(120deg,#2B2823,#4A463F); }
+
+/* number → product logo swap */
+.work-ic{ position:relative; overflow:hidden; }
+.work-ic .num, .work-ic .logo{ transition:opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1); }
+.work-ic .logo{ position:absolute; inset:0; display:grid; place-items:center; opacity:0; transform:scale(.6) rotate(-12deg); }
+.work-ic .logo img{ width:100%; height:100%; object-fit:cover; }
+.work-ic .logo img + .logo-fb{ display:none; }
+.work-ic .logo .logo-fb{ width:100%; height:100%; }
+.project[data-brand="orbex"] .work-ic .logo{ padding:9px; }
+.project[data-brand]:is(.is-active,:hover,:focus-within) .work-ic .num{ opacity:0; transform:scale(.6); }
+.project[data-brand]:is(.is-active,:hover,:focus-within) .work-ic .logo{ opacity:1; transform:none; }
+.project[data-brand="orbex"]:is(.is-active,:hover,:focus-within) .work-ic{ background:#101E2E; box-shadow:inset 0 0 0 1px #223449, 0 0 22px rgba(255,107,61,.35); }
+.project[data-brand="deepai"]:is(.is-active,:hover,:focus-within) .work-ic{ background:#000; box-shadow:0 8px 20px rgba(67,56,202,.3); }
+
+/* demo overlay takes the product's look too */
+.demo[data-brand="orbex"]{ --bg:#0B1420; --nav-bg:rgba(11,20,32,.92); --chip-bg:#152738; --chip-bg-2:#1C3349; --chip-ink:#FF6B3D; --muted:#8CA0B3; --line:#223449; --grad:linear-gradient(120deg,#FF6B3D,#FF8A5C); }
+.demo[data-brand="deepai"]{ --bg:#FBFBFD; --nav-bg:rgba(251,251,253,.92); --chip-bg:#EEF0FF; --chip-bg-2:#E0E3FF; --chip-ink:#4338CA; --muted:#6B7280; --line:#E5E7EB; --grad:linear-gradient(120deg,#4338CA,#6D5BD6); }
+
+/* ---------- Skills ---------- */
+.skill-grid{ display:grid; gap:18px; }
+@media (min-width:760px){ .skill-grid{ grid-template-columns:1fr 1fr; } }
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:24px; box-shadow:var(--shadow-sm); transition:transform .22s, box-shadow .28s; }
+.card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.card h3{ font-size:17.5px; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+.card h3 .ic{ width:36px; height:36px; border-radius:10px; background:var(--chip-bg); color:var(--accent); display:grid; place-items:center; flex:none; }
+.card h3 .ic svg{ width:19px; height:19px; }
+.chips{ display:flex; flex-wrap:wrap; gap:9px; }
+.chips li{ display:flex; align-items:center; gap:9px; background:var(--bg-alt); border:1px solid var(--line); border-radius:12px; padding:9px 14px; font-weight:600; font-size:14px; color:var(--heading); transition:transform .18s, color .2s, border-color .2s, box-shadow .25s; }
+.chips li::before{ content:""; width:8px; height:8px; border-radius:50%; background:var(--grad); flex:none; }
+.chips li:hover{ transform:translateY(-2px); color:var(--accent); border-color:var(--sky-200); box-shadow:var(--shadow-sm); }
+
+
+/* ---------- Core expertise: Sales & management ---------- */
+.sm{ position:relative; overflow:hidden; isolation:isolate; margin-bottom:22px; border-radius:var(--r-lg); color:#fff; box-shadow:var(--shadow-lg);
+  background:linear-gradient(135deg,#0a3050,#155f96 55%,#1f93c9); padding:28px 22px; }
+.sm::before{ content:""; position:absolute; z-index:-1; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%); top:-180px; right:-120px; animation:drift 13s ease-in-out infinite alternate; }
+.sm::after{ content:""; position:absolute; z-index:-1; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle,rgba(80,200,240,.3),transparent 70%); bottom:-170px; left:-90px; animation:drift 11s ease-in-out infinite alternate-reverse; }
+.sm .lab{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:#d6f1ff; display:inline-flex; align-items:center; gap:9px; }
+.sm .lab::before{ content:""; width:22px; height:2px; background:#fff; border-radius:2px; }
+.sm-head h3{ color:#fff; font-size:clamp(24px,3.6vw,32px); font-weight:800; margin-top:12px; display:flex; align-items:center; gap:12px; }
+.sm-head h3 .ic{ width:44px; height:44px; border-radius:13px; background:rgba(255,255,255,.16); display:grid; place-items:center; flex:none; }
+.sm-head h3 .ic svg{ width:22px; height:22px; color:#fff; }
+.sm-head p{ color:#d9f0ff; font-size:16.5px; margin-top:12px; max-width:44em; }
+.sm-groups{ display:grid; gap:14px; margin-top:24px; }
+.sm-g{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); border-radius:var(--r-md); padding:18px; transition:background .25s, transform .25s; }
+.sm-g:hover{ background:rgba(255,255,255,.13); transform:translateY(-3px); }
+.sm-g h4{ color:#fff; font-size:16px; display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.sm-g h4 .n{ font-family:var(--font-mono); font-size:12px; font-weight:700; color:#8fcef5; background:rgba(255,255,255,.12); border-radius:8px; padding:3px 7px; }
+.sm .chips{ gap:8px; }
+.sm .chips li{ background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.18); color:#fff; font-size:13.5px; padding:8px 12px; }
+.sm .chips li::before{ background:#8fcef5; }
+.sm .chips li:hover{ color:#fff; border-color:rgba(255,255,255,.4); box-shadow:none; background:rgba(255,255,255,.16); }
+.sm-proof{ margin:22px 0 0; padding-top:20px; border-top:1px solid rgba(255,255,255,.2); display:grid; grid-template-columns:repeat(2,1fr); gap:16px 20px; }
+.sm-proof dt{ font-family:var(--font-display); font-weight:800; font-size:28px; line-height:1; }
+.sm-proof dd{ margin:6px 0 0; font-size:13px; color:#cfeeff; font-weight:600; }
+@media (min-width:760px){ .sm{ padding:40px 44px; } .sm-proof{ grid-template-columns:repeat(5,1fr); } }
+@media (min-width:940px){ .sm-groups{ grid-template-columns:repeat(3,1fr); } }
+.skill-grid > .sg:last-child:nth-child(odd){ grid-column:1 / -1; }
+
+/* ---------- Education ---------- */
+.edu-grid{ display:grid; gap:18px; }
+@media (min-width:860px){ .edu-grid{ grid-template-columns:1fr 1fr; } }
+.edu-item + .edu-item{ margin-top:22px; padding-top:22px; border-top:1px solid var(--line); }
+.edu-item h4{ font-size:16.5px; }
+.edu-item p{ margin-top:6px; color:var(--muted); font-size:14.5px; font-weight:600; }
+.edu-item .doc{ margin-top:16px; aspect-ratio:1.414/1; }
+.doc-dip{ aspect-ratio:1.78/1 !important; background:#fff !important; }
+.doc-dip img{ object-fit:contain; }
+.doc-photo{ aspect-ratio:4/3 !important; }
+.doc-photo img{ object-position:50% 45%; }
+.doc-cap{ display:inline-block; margin-top:10px; font-size:12.5px; font-weight:800; color:var(--chip-ink); background:var(--chip-bg); padding:4px 12px; border-radius:999px; }
+
+/* ---------- Contact ---------- */
+.contact-card{ position:relative; border-radius:var(--r-lg); overflow:hidden; background:linear-gradient(135deg,#0a3050,#155f96 55%,#1f93c9); color:#fff; padding:36px 22px; box-shadow:var(--shadow-lg); isolation:isolate; }
+.contact-card::before{ content:""; position:absolute; z-index:-1; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%); bottom:-180px; left:-100px; animation:drift 13s ease-in-out infinite alternate; }
+.contact-card::after{ content:""; position:absolute; z-index:-1; width:320px; height:320px; border-radius:50%; background:radial-gradient(circle,rgba(80,200,240,.35),transparent 70%); top:-140px; right:-60px; animation:drift 11s ease-in-out infinite alternate-reverse; }
+.contact-in{ display:grid; gap:30px; align-items:center; }
+.contact-in .eyebrow{ color:#bfe2ff; }
+.contact-in .eyebrow::before{ background:#fff; }
+.contact-in h2{ color:#fff; font-size:clamp(27px, 4vw, 40px); font-weight:800; margin-top:14px; }
+.contact-in .sub{ color:#d6ecff; font-size:16.5px; margin-top:14px; max-width:26em; }
+.contact-in .btn{ margin-top:24px; background:#fff; color:var(--sky-800); box-shadow:0 10px 24px rgba(0,0,0,.18); }
+.contact-in .btn:hover{ transform:translateY(-2px); }
+.contact-list{ display:grid; gap:12px; }
+.cl-item{ display:flex; align-items:center; gap:14px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); border-radius:16px; padding:14px 16px; transition:background .2s, transform .2s; min-width:0; }
+a.cl-item:hover{ background:rgba(255,255,255,.18); transform:translateX(4px); }
+.cl-item .ic{ flex:none; width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.16); display:grid; place-items:center; color:#fff; }
+.cl-item .ic svg{ width:21px; height:21px; }
+.cl-item > div{ min-width:0; }
+.cl-item span{ font-size:12.5px; color:#bfe2ff; font-weight:700; display:block; }
+.cl-item b{ font-family:var(--font-display); font-size:15.5px; font-weight:600; display:block; overflow-wrap:anywhere; }
+@media (min-width:860px){ .contact-card{ padding:56px 52px; } .contact-in{ grid-template-columns:1fr 1fr; gap:44px; } }
+
+.site-footer{ background:#07253d; color:#cfe3f2; padding:36px 0 calc(36px + env(safe-area-inset-bottom)); }
+.foot-in{ display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; }
+.foot-in .brand{ color:#fff; padding:0; }
+.foot-in .brand .dot{ box-shadow:none; }
+.foot-muted{ font-size:13.5px; color:#7fa3bd; }
+.foot-in a.top{ font-weight:700; color:#8fcef5; }
+
+/* ---------- Lightbox ---------- */
+dialog.lb{ border:0; padding:0; margin:0; position:fixed; inset:0; width:100%; height:100%; max-width:none; max-height:none; box-sizing:border-box; background:rgba(4,16,28,.94); color:#e6f3fd; }
+dialog.lb::backdrop{ background:rgba(4,16,28,.94); }
+.lb-inner{ height:100%; display:grid; grid-template-rows:auto minmax(0,1fr) auto; grid-template-columns:minmax(0,1fr); padding:calc(10px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
+.lb-bar, .lb-foot{ display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.lb-count{ font-variant-numeric:tabular-nums; font-weight:700; font-size:.9rem; opacity:.8; }
+.lb-btn{ font:inherit; font-weight:700; color:#e6f3fd; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25); min-width:44px; min-height:44px; padding:0 16px; border-radius:999px; cursor:pointer; }
+.lb-btn:hover{ background:rgba(255,255,255,.2); }
+.lb-btn[hidden]{ display:none; }
+.lb-stage{ display:grid; place-items:center; min-height:0; min-width:0; padding:12px 0; }
+.lb-stage img{ max-width:100%; max-height:100%; object-fit:contain; background:#fff; border-radius:12px; }
+.lb-cap{ font-size:.9rem; opacity:.85; text-align:center; flex:1; }
+
+/* ---------- Demo overlay ---------- */
+.demo-scrim{ position:fixed; inset:0; z-index:88; background:rgba(4,16,28,.55); opacity:0; pointer-events:none; transition:opacity .6s; }
+.demo-scrim.on{ opacity:1; }
+.demo{ position:fixed; inset:0; z-index:90; display:grid; grid-template-rows:auto 1fr; background:var(--bg); --pc:var(--accent); clip-path:inset(var(--ct,0px) var(--cr,0px) var(--cb,0px) var(--cl,0px) round 16px); }
+.demo[hidden]{ display:none; }
+.demo.animating{ transition:clip-path .75s cubic-bezier(.76,0,.24,1); }
+.demo.full{ clip-path:inset(0 0 0 0 round 0); }
+.demo-bar{ display:flex; align-items:center; gap:10px; border-bottom:3px solid var(--pc); background:var(--nav-bg); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); padding:calc(8px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left)); }
+.demo-btn{ font:inherit; font-weight:700; font-size:14px; border:0; border-radius:999px; min-height:40px; padding:0 16px; display:inline-flex; align-items:center; cursor:pointer; white-space:nowrap; background:var(--chip-bg); color:var(--chip-ink); }
+.demo-btn:hover{ background:var(--chip-bg-2); }
+.demo-new{ background:var(--grad); color:#fff; }
+.demo-new:hover{ background:var(--grad); filter:brightness(1.08); }
+.demo-url{ flex:1; min-width:0; font-family:var(--font-mono); font-size:13px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center; }
+@media (max-width:520px){ .demo-url{ display:none; } .demo-bar{ justify-content:space-between; } }
+.demo-stage{ position:relative; background:#fff; min-height:0; }
+.demo-stage iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.demo-loading{ position:absolute; inset:0; z-index:1; display:grid; place-content:center; justify-items:center; gap:14px; background:var(--bg); color:var(--muted); font-weight:700; transition:opacity .5s; }
+.demo.loaded .demo-loading{ opacity:0; pointer-events:none; }
+.demo-spinner{ width:36px; height:36px; border-radius:50%; border:3px solid var(--line); border-top-color:var(--pc); animation:spin .8s linear infinite; }
+
+/* ---------- Motion ---------- */
+main{ overflow-x:clip; transition:opacity .18s ease; }
+main.swap{ opacity:0; }
+.js .site-header{ animation:headerIn .8s cubic-bezier(.16,1,.3,1) both; }
+@keyframes headerIn{ from{ transform:translateY(-100%); } }
+.js .name .line > span{ transform:translateY(108%); animation:rise 1.1s cubic-bezier(.16,1,.3,1) forwards; animation-delay:var(--d,0ms); }
+@keyframes rise{ to{ transform:none; } }
+.js .hero-anim{ opacity:0; transform:translateY(16px); animation:fadeUp .9s cubic-bezier(.16,1,.3,1) forwards; animation-delay:var(--d,0ms); }
+@keyframes fadeUp{ to{ opacity:1; transform:none; } }
+.js .avatar-in{ opacity:0; transform:scale(.86); animation:popIn 1.1s cubic-bezier(.16,1,.3,1) .2s forwards; }
+@keyframes popIn{ to{ opacity:1; transform:none; } }
+.js [data-reveal]{ opacity:0; transform:translateY(26px); transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1), box-shadow .3s, border-color .3s; transition-delay:var(--rd,0ms); }
+.js [data-reveal].in{ opacity:1; transform:none; }
+.js .project[data-reveal].in:hover{ transform:translateY(-4px); }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{ animation:none!important; transition:none!important; }
+  .js .name .line > span, .js .hero-anim, .js .avatar-in, .js [data-reveal]{ opacity:1!important; transform:none!important; }
+  .js .tl::before{ display:none; }
+}
+@media print{
+  .site-header, .lb, .skip, .hero-cta, .shots, .lives, .demo, .demo-scrim, .hero-blob, .badge-float{ display:none!important; }
+  [data-reveal]{ opacity:1!important; transform:none!important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Asosiy qismga o‘tish</a>
+
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-gh" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C17.3 4.8 18.3 5.1 18.3 5.1c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-5-6.7"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v6"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/></symbol>
+</svg>
+
+<header class="site-header" id="nav">
+  <div class="wrap header-inner">
+    <a class="brand" href="#about" aria-label="Diyorbek Nosirov"><span class="dot" aria-hidden="true">DN</span><span class="nm">Diyorbek Nosirov</span></a>
+    <nav class="nav" aria-label="Menu" data-i18n-attr="aria-label:nav.label">
+      <ul>
+        <li><a href="#about" data-i18n="nav.about">Men haqimda</a></li>
+        <li><a href="#experience" data-i18n="nav.exp">Tajriba</a></li>
+        <li><a href="#projects" data-i18n="nav.projects">Loyihalar</a></li>
+        <li><a href="#skills" data-i18n="nav.skills">Ko‘nikmalar</a></li>
+        <li><a href="#education" data-i18n="nav.edu">Ta’lim</a></li>
+        <li><a href="#contact" data-i18n="nav.contact">Aloqa</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang" role="group" aria-label="Til" data-i18n-attr="aria-label:lang.label">
+        <button type="button" data-lang="uz" aria-pressed="true" lang="uz" aria-label="O‘zbekcha">UZ</button>
+        <button type="button" data-lang="ru" aria-pressed="false" lang="ru" aria-label="Русский">RU</button>
+        <button type="button" data-lang="en" aria-pressed="false" lang="en" aria-label="English">EN</button>
+      </div>
+      <a class="btn btn-primary header-cta" href="#contact" data-i18n="hero.cta1">Bog‘lanish</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ===================== HERO ===================== -->
+<section id="about" class="hero" aria-labelledby="name">
+  <div class="hero-blob b1" aria-hidden="true"></div>
+  <div class="hero-blob b2" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="pill hero-anim" style="--d:60ms">
+          <span class="tag">PM</span>
+          <span class="tag" data-i18n="tag.h2">Sotuv tizimlari</span>
+          <span class="tag">Vibecoder</span>
+        </div>
+        <h1 class="name" id="name"><span class="line"><span style="--d:140ms">Diyorbek</span></span><span class="line"><span class="grad-text" style="--d:260ms">Nosirov</span></span></h1>
+        <p class="role hero-anim" style="--d:460ms" data-i18n="hero.role">Loyiha menejeri (PM) · Sotuv tizimlarini qurish va raqamlashtirish · Vibecoder</p>
+        <span class="loc hero-anim" style="--d:520ms"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="c.loc.v">O‘zbekiston</span></span>
+        <p class="lead hero-anim" style="--d:580ms" data-i18n="hero.about">Sotuv, HR va operatsion boshqaruv sohasida 3 yildan ortiq tajriba. Kompaniyalar uchun sotuv bo‘limini noldan quraman, jamoa yig‘aman va jarayonlarni dashboard, CRM hamda Telegram-botlar orqali raqamlashtiraman. Vibecoder sifatida AI vositalari yordamida g‘oyadan ishga tushirilgan mahsulotgacha mustaqil yetib boraman; biznes jarayonini ham, texnik yechimni ham tushunaman.</p>
+        <div class="hero-cta hero-anim" style="--d:680ms">
+          <a class="btn btn-primary btn-lg" href="#contact"><span data-i18n="hero.cta1">Bog‘lanish</span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-ghost btn-lg" href="#projects" data-i18n="hero.cta2">Loyihalarni ko‘rish →</a>
+        </div>
+        <div class="socials hero-anim" style="--d:760ms">
+          <a class="soc" href="mailto:diyorbeknosirov3010@gmail.com" aria-label="Email"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg></a>
+          <a class="soc" href="tel:+998940153010" aria-label="+998 94 015 30 10"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></a>
+          <a class="soc" href="https://github.com/diyorbeknosirov" target="_blank" rel="noopener" aria-label="GitHub"><svg class="i" aria-hidden="true"><use href="#i-gh"/></svg></a>
+        </div>
+      </div>
+
+      <div class="avatar-wrap avatar-in">
+        <!-- PHOTO: images/profile.jpg (taken from the CV; replace the file to change it) -->
+        <div class="avatar-ring" data-img>
+          <img src="images/profile.jpg" alt="Diyorbek Nosirov" width="700" height="875" fetchpriority="high">
+          <span class="ph-label"><span data-i18n="ph">Rasm joyi</span><code>images/profile.jpg</code></span>
+        </div>
+        <div class="badge-float bf-1"><span class="ic" aria-hidden="true"><svg><use href="#i-box"/></svg></span><div><b>7</b><span data-i18n="b2">raqamli mahsulot</span></div></div>
+        <div class="badge-float bf-2"><span class="ic" aria-hidden="true"><svg><use href="#i-trend"/></svg></span><div><b>3+</b><span data-i18n="b1">yillik tajriba</span></div></div>
+      </div>
+    </div>
+
+    <dl class="metrics">
+      <div class="metric hero-anim" style="--d:820ms"><dt class="num" data-count="3" data-suffix="+">3+</dt><dd class="lbl" data-i18n="stat1">yillik sotuv, HR va boshqaruv tajribasi</dd></div>
+      <div class="metric hero-anim" style="--d:900ms"><dt class="num" data-count="7">7</dt><dd class="lbl" data-i18n="stat2">ta raqamli mahsulot yaratilgan</dd></div>
+      <div class="metric hero-anim" style="--d:980ms"><dt class="num" data-count="1300" data-suffix="+">1300+</dt><dd class="lbl" data-i18n="stat3">nafar o‘quvchi jarayonlari boshqarilgan</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ===================== EXPERIENCE ===================== -->
+<section id="experience" class="sec" aria-labelledby="h-exp">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="nav.exp">Tajriba</span>
+      <h2 id="h-exp" data-i18n="h.exp">3 yildan ortiq sotuv va boshqaruv tajribasi</h2>
+    </div>
+
+    <!-- Latest role, highlighted -->
+    <article class="featured">
+      <div class="featured-in">
+        <div>
+          <span class="lab" data-i18n="feat.lab">So‘nggi lavozim</span>
+          <h3 data-i18n="e1.t">Loyiha menejeri (PM) va ROP</h3>
+          <p class="sub"><span data-i18n="e1.o">Deep AI — AI ta’lim platformasi</span> · <span class="when" data-range="2026-06/2026-08">iyun 2026 — avgust 2026</span></p>
+          <ul data-i18n="e1.b">
+            <li>Loyiha jarayonlarini boshqargan, jamoa vazifalarini taqsimlagan, muddatlar va natijalar nazoratini yo‘lga qo‘ygan.</li>
+            <li>ROP sifatida Prompt Engineering, Media Master va Vibe Coding kurslari bo‘yicha sotuv operatorlari ishini boshqargan.</li>
+            <li>Sotuv dashboardi, operator KPI tizimi va Telegram-botlarni yaratib, jamoaning kundalik ishiga joriy qilgan.</li>
+            <li>10 ga yaqin xodimni ishga olgan; ular uchun onboarding dasturlarini tayyorlagan, dars va treninglar o‘tkazgan.</li>
+          </ul>
+        </div>
+        <div class="featured-side">
+          <div class="fstat"><b>~10</b><span data-i18n="feat.s3">xodim ishga olingan va onboardingdan o‘tgan</span></div>
+          <div class="fstat"><b>3</b><span data-i18n="feat.s1">kurs yo‘nalishi bo‘yicha operatorlar</span></div>
+          <div class="fstat"><b>KPI</b><span data-i18n="feat.s2">operatorlar uchun tizim</span></div>
+        </div>
+      </div>
+    </article>
+
+    <ol class="tl">
+      <li class="tl-item">
+        <div class="tl-meta"><div class="tl-date" data-range="2026-01/2026-05">2026-01/2026-05</div><span class="tl-type" data-i18n="t.mgmt">Boshqaruv</span></div>
+        <div class="tl-body"><span class="tl-node" aria-hidden="true"></span>
+          <div class="tl-card">
+            <div class="tl-mobile-date"><span class="tl-date" data-range="2026-01/2026-05">2026-01/2026-05</span><span class="tl-type" data-i18n="t.mgmt">Boshqaruv</span></div>
+            <h3 data-i18n="e2.t">HR va akademik bo‘lim menejeri</h3>
+            <p class="org">My Teacher</p>
+            <ul class="bul" data-i18n="e2.b">
+              <li>20 dan ortiq xodimni tanlab, ishga olgan; ular uchun onboarding dasturlari va treninglar tayyorlab o‘tkazgan.</li>
+              <li>Akademik bo‘limda 13 nafar o‘qituvchi faoliyatini tizimlashtirgan va nazorat qilgan.</li>
+              <li>1300 nafardan ortiq o‘quvchi bilan bog‘liq jarayonlarni yuritgan, yuzaga kelgan muammolarni hal qilgan.</li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li class="tl-item">
+        <div class="tl-meta"><div class="tl-date" data-range="2025-05/2026-01">2025-05/2026-01</div><span class="tl-type sales" data-i18n="t.sales">Sotuv</span></div>
+        <div class="tl-body"><span class="tl-node" aria-hidden="true"></span>
+          <div class="tl-card">
+            <div class="tl-mobile-date"><span class="tl-date" data-range="2025-05/2026-01">2025-05/2026-01</span><span class="tl-type sales" data-i18n="t.sales">Sotuv</span></div>
+            <h3 data-i18n="e3.t">Sotuvchi (onlayn ingliz tili kurslari)</h3>
+            <p class="org">My Teacher</p>
+            <ul class="bul" data-i18n="e3.b">
+              <li>MyTeacher — onlayn ingliz tili platformasi: mobil ilova va shaxsiy mentor bilan jonli darslar; General English, IELTS, CEFR, Business English va bolalar uchun kurslar.</li>
+              <li>Lidlar bilan ishlash: bepul birinchi darsga yozish (unda mentor darajani aniqlab, shaxsiy reja tuzadi) va obuna paketlarini sotish.</li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li class="tl-item">
+        <div class="tl-meta"><div class="tl-date" data-range="2025-01/2025-05">2025-01/2025-05</div><span class="tl-type" data-i18n="t.mgmt">Boshqaruv</span></div>
+        <div class="tl-body"><span class="tl-node" aria-hidden="true"></span>
+          <div class="tl-card">
+            <div class="tl-mobile-date"><span class="tl-date" data-range="2025-01/2025-05">2025-01/2025-05</span><span class="tl-type" data-i18n="t.mgmt">Boshqaruv</span></div>
+            <h3 data-i18n="e4.t">ROP (sotuv bo‘limi rahbari)</h3>
+            <p class="org" data-i18n="e4.o">BAD (biologik faol qo‘shimchalar) sohasi</p>
+            <ul class="bul" data-i18n="e4.b">
+              <li>Sotuv bo‘limi jarayonlarini boshqargan va sotuvchilar faoliyatini nazorat qilgan.</li>
+              <li>Bo‘lim uchun 5 nafar xodimni tanlab, ishga olgan.</li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li class="tl-item">
+        <div class="tl-meta"><div class="tl-date" data-range="2024-09/2025-01">2024-09/2025-01</div><span class="tl-type sales" data-i18n="t.sales">Sotuv</span></div>
+        <div class="tl-body"><span class="tl-node" aria-hidden="true"></span>
+          <div class="tl-card">
+            <div class="tl-mobile-date"><span class="tl-date" data-range="2024-09/2025-01">2024-09/2025-01</span><span class="tl-type sales" data-i18n="t.sales">Sotuv</span></div>
+            <h3 data-i18n="e6.t">Sotuvchi (BAD yo‘nalishi)</h3>
+            <p class="org">Euphoria Group</p>
+            <ul class="bul" data-i18n="e6.b">
+              <li>Euphoria Group — 2019-yildan beri O‘zbekistonda tabiiy biologik faol qo‘shimchalar (immunitet, energiya, go‘zallik) bilan ishlaydigan kompaniya; sotuv call-markaz, TV va onlayn reklama hamda o‘z kuryerlik xizmati orqali.</li>
+              <li>Call-markazda mijozlarga maslahat berib, ehtiyojiga mos mahsulotni tanlash va buyurtmani yetkazib berishga rasmiylashtirish.</li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li class="tl-item">
+        <div class="tl-meta"><div class="tl-date" data-range="2023-06/2023-12">2023-06/2023-12</div><span class="tl-type sales" data-i18n="t.sales">Sotuv</span></div>
+        <div class="tl-body"><span class="tl-node" aria-hidden="true"></span>
+          <div class="tl-card">
+            <div class="tl-mobile-date"><span class="tl-date" data-range="2023-06/2023-12">2023-06/2023-12</span><span class="tl-type sales" data-i18n="t.sales">Sotuv</span></div>
+            <h3 data-i18n="e7.t">Sotuvchi (oshxona texnikalari)</h3>
+            <p class="org">Hop Shop</p>
+            <ul class="bul" data-i18n="e7.b">
+              <li>Hop Shop — O‘zbekistondagi birinchi rasmiy TV-do‘kon sifatida boshlangan savdo kompaniyasi.</li>
+              <li>Oshxona texnikalari bo‘yicha mijozlarga maslahat berish, mahsulotni taqdim etish va buyurtmalarni rasmiylashtirish.</li>
+            </ul>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===================== PROJECTS ===================== -->
+<!--
+  SCREENSHOTS: exact paths shown below (16:10 landscape, e.g. 1600×1000 .jpg). 2–4 per project: copy a <button class="shot"> line.
+  LINKS: fill in href="" on a button. An empty href keeps the button hidden.
+-->
+<section id="projects" class="sec alt" aria-labelledby="h-projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="nav.projects">Loyihalar</span>
+      <h2 id="h-projects" data-i18n="h.projects">Vibecoder sifatida yaratgan mahsulotlarim</h2>
+      <p data-i18n="p.intro">AI vositalari yordamida g‘oyadan ishga tushirilgan mahsulotgacha mustaqil yetkazilgan loyihalar.</p>
+    </div>
+    <ol class="projects">
+
+      <!-- 1. Orbex -->
+      <li class="project wide" data-project="Orbex" data-color="sky" data-brand="orbex">
+        <span class="brand-layer" aria-hidden="true"></span>
+        <div class="work-top"><span class="work-ic" aria-hidden="true"><span class="num">01</span><span class="logo"><img src="https://audit.orbex.uz/assets/orbex_icon_only_transparent.png" alt="" loading="lazy" onerror="this.remove()"><svg class="logo-fb" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#FF6B3D" stroke-width="2.2" stroke-linecap="round"><path d="M7 6.5 17 12M7 17.5 17 12M7 6.5v11"/></g><g fill="#FF6B3D"><circle cx="6.5" cy="6" r="3"/><circle cx="6.5" cy="18" r="3"/><circle cx="17.5" cy="12" r="3.4"/></g></svg></span></span><span class="work-tag" data-i18n="tag.personal">Shaxsiy loyiha</span></div>
+        <h3>Orbex</h3>
+        <p class="p-sub" data-i18n="p1.s">B2B IT-xizmatlar g‘oyasi uchun platforma prototipi</p>
+        <ul class="bul" data-i18n="p1.b">
+          <li><b>Landing (orbex.uz):</b> 5 ta xizmat yo‘nalishi — boshqaruv dashboard, CRM integratsiya (AmoCRM, Bitrix24), Telegram bot va AI agent, sayt va mobil ilova, jarayonlarni avtomatlashtirish; 4 ta soha bo‘yicha segmentlar (ta’lim, savdo, xizmat, ishlab chiqarish), 5 bosqichli ish jarayoni va hamkorlik modeli.</li>
+          <li><b>Lidlar oqimi:</b> Supabase’ga ulangan aloqa formasi, har bir yangi lid haqida Telegram orqali bildirishnoma.</li>
+          <li><b>AI audit (audit.orbex.uz):</b> ikki turdagi audit — raqamlashtirish auditi va to‘liq biznes auditi. Mijoz statistikasi (lidlar, konversiya, javob vaqti, savdo hajmi), moliya, bozor va raqobat, marketing, sotuv sikli va har bir operator ko‘rsatkichlari yig‘iladi; AI (Claude / OpenAI) joriy holatni baholab, kerakli xizmatlar va raqamli prognozni chiqaradi. Savollar kompaniya turiga moslashadi, natijalar Supabase’da saqlanadi.</li>
+          <li><b>Admin panel:</b> Supabase Auth bilan himoyalangan.</li>
+          <li><b>ERP/CRM texnik topshirig‘i:</b> to‘liq Prisma sxemasi va 20 haftalik bosqichli yo‘l xaritasi.</li>
+        </ul>
+        <dl class="p-facts">
+          <div><dt>5</dt><dd data-i18n="f1">xizmat yo‘nalishi</dd></div>
+          <div><dt>4</dt><dd data-i18n="f2">soha segmenti</dd></div>
+          <div><dt>2</dt><dd data-i18n="f3">turdagi AI audit</dd></div>
+        </dl>
+        <p class="stack"><span class="lbl">Stack</span><span class="t">Next.js</span><span class="t">Supabase (Auth)</span><span class="t">Prisma</span><span class="t">Anthropic API</span><span class="t">OpenAI API</span><span class="t">Telegram Bot API</span><span class="t">Vercel</span></p>
+        <div class="plinks">
+          <a class="plink main" href="https://www.orbex.uz/" target="_blank" rel="noopener">Live ↗</a>
+          <a class="plink" href="https://audit.orbex.uz/" target="_blank" rel="noopener">AI audit ↗</a>
+          <a class="plink" href="" target="_blank" rel="noopener">GitHub ↗</a> <!-- LINK: Orbex repo (optional) -->
+        </div>
+        <div class="lives two">
+          <figure class="live">
+            <figcaption class="live-bar"><span class="live-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="live-url">orbex.uz</span><span class="live-badge">Live</span></figcaption>
+            <div class="live-view">
+              <iframe data-src="https://www.orbex.uz/" title="orbex.uz — preview" tabindex="-1" aria-hidden="true" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+              <button type="button" class="live-hit" data-demo="https://www.orbex.uz/"><span class="live-cta" data-i18n="demo.open">Demoni ochish →</span></button>
+            </div>
+            <p class="live-note" data-i18n="n.orbex">Landing: xizmatlar, sohalar, ish jarayoni va aloqa formasi</p>
+          </figure>
+          <figure class="live">
+            <figcaption class="live-bar"><span class="live-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="live-url">audit.orbex.uz</span><span class="live-badge">Live</span></figcaption>
+            <div class="live-view">
+              <iframe data-src="https://audit.orbex.uz/" title="audit.orbex.uz — preview" tabindex="-1" aria-hidden="true" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+              <button type="button" class="live-hit" data-demo="https://audit.orbex.uz/"><span class="live-cta" data-i18n="demo.open">Demoni ochish →</span></button>
+            </div>
+            <p class="live-note" data-i18n="n.audit">AI audit: 2 turdagi audit, mijoz statistikasi va AI tahlil</p>
+          </figure>
+        </div>
+      </li>
+
+      <!-- 2. Deep AI Sales Dashboard -->
+      <li class="project wide" data-project="Deep AI Sales Dashboard" data-color="violet" data-brand="deepai">
+        <span class="brand-layer" aria-hidden="true"></span>
+        <div class="work-top"><span class="work-ic" aria-hidden="true"><span class="num">02</span><span class="logo"><img src="https://salesdashboard-sable.vercel.app/deepai-logo.jpg" alt="" loading="lazy" onerror="this.remove()"><svg class="logo-fb" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#000"/><text x="24" y="28.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12.5" font-weight="700" fill="#fff">deep<tspan fill="#5b8cff">ai</tspan></text></svg></span></span><span class="work-tag" data-i18n="tag.deepai">Deep AI uchun</span></div>
+        <h3>Deep AI Sales Dashboard</h3>
+        <p class="p-sub" data-i18n="p2.s">Sotuv jamoasi uchun vizual va interaktiv dashboard hamda leaderboard</p>
+        <ul class="bul" data-i18n="p2.b">
+          <li><b>Dashboard va leaderboard:</b> Deep AI sotuv jamoasi uchun sotuv boshqaruv tizimi; email va parol bilan himoyalangan kirish.</li>
+          <li><b>Modullar:</b> invoyslar, operator KPI, qo‘ng‘iroqlar tahlili.</li>
+          <li><b>Integratsiya:</b> AmoCRM va MoiZvonki webhooklari; sotuv tasdiqlanganda exode.biz platformasida kursga kirish avtomatik ochiladi.</li>
+          <li><b>Telegram-botlar:</b> kassa boti va mijozlar uchun sotuv boti (Python / aiogram); sotuv boti Vercel’da webhook xizmati sifatida ishlaydi.</li>
+        </ul>
+        <p class="stack"><span class="lbl">Stack</span><span class="t">Vercel</span><span class="t">Python (aiogram)</span><span class="t">AmoCRM</span><span class="t">MoiZvonki</span><span class="t">Webhooks</span><span class="t">GitHub</span></p>
+        <div class="plinks">
+          <a class="plink main" href="https://salesdashboard-sable.vercel.app/demo?role=admin" target="_blank" rel="noopener">Demo ↗</a>
+          <a class="plink" href="https://salesdashboard-sable.vercel.app/login" target="_blank" rel="noopener">Live ↗</a>
+          <a class="plink" href="https://deepai-telegram-bot.vercel.app/" target="_blank" rel="noopener">Telegram bot ↗</a>
+          <a class="plink" href="" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+        <div class="lives">
+          <figure class="live">
+            <figcaption class="live-bar"><span class="live-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="live-url">salesdashboard-sable.vercel.app</span><span class="live-badge">Live</span></figcaption>
+            <div class="live-view">
+              <iframe data-src="https://salesdashboard-sable.vercel.app/demo?role=admin" title="Sales Dashboard — preview" tabindex="-1" aria-hidden="true" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+              <button type="button" class="live-hit" data-demo="https://salesdashboard-sable.vercel.app/demo?role=admin"><span class="live-cta" data-i18n="demo.open">Demoni ochish →</span></button>
+            </div>
+            <p class="live-note" data-i18n="n.dash">Demo versiya: parolsiz, to‘qima ma’lumotlar bilan — Admin, Sotuvchi va Mentor rollarini sinab ko‘ring</p>
+          </figure>
+        </div>
+      </li>
+
+      <!-- 5. Icarus -->
+      <li class="project wide" data-project="Icarus" data-color="red" data-brand="icarus">
+        <span class="brand-layer" aria-hidden="true"></span>
+        <div class="work-top"><span class="work-ic" aria-hidden="true"><span class="num">03</span><span class="logo"><img src="images/icarus-icon.png" alt="" loading="lazy"></span></span><span class="work-tag" data-i18n="tag.dev">Shaxsiy mahsulot · ishlanmoqda</span></div>
+        <h3>Icarus</h3>
+        <p class="p-sub" data-i18n="p5.s">Shaxsiy AI-yordamchi (PWA)</p>
+        <ul class="bul" data-i18n="p5.b">
+          <li><b>Suhbat va tool use:</b> Claude (Anthropic API) foydalanuvchi gapidan vazifa yoki eslatma kerakligini o‘zi aniqlaydi, <code>create_task</code> / <code>create_reminder</code> vositalarini chaqirib, natijani Supabase’ga yozadi.</li>
+          <li><b>Ovoz:</b> nutq gpt-4o-transcribe orqali o‘zbekcha lotin yozuvida matnga aylanadi; javob gpt-4o-mini-tts bilan iliq, jonli ovozda o‘qiladi.</li>
+          <li><b>Integratsiyalar:</b> Google Sheets, push-bildirishnomalar, Telegram MTProto (GramJS) orqali kirish. Rivojlantirish davom etmoqda.</li>
+        </ul>
+        <p class="stack"><span class="lbl">Stack</span><span class="t">Next.js 14</span><span class="t">PWA</span><span class="t">Claude API (tool use)</span><span class="t">gpt-4o-transcribe</span><span class="t">gpt-4o-mini-tts</span><span class="t">Supabase</span><span class="t">GramJS</span><span class="t">Google Sheets</span></p>
+        <div class="plinks">
+          <a class="plink main" href="icarus-demo.html" target="_blank" rel="noopener" data-lang-link>Demo ↗</a>
+          <a class="plink" href="" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+        <div class="lives">
+          <figure class="live">
+            <figcaption class="live-bar"><span class="live-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="live-url">Icarus · Personal AI</span><span class="live-badge">Demo</span></figcaption>
+            <div class="live-view">
+              <iframe data-src="icarus-demo.html" title="Icarus — demo" tabindex="-1" aria-hidden="true" sandbox="allow-scripts allow-same-origin"></iframe>
+              <button type="button" class="live-hit" data-demo="icarus-demo.html"><span class="live-cta" data-i18n="demo.open">Demoni ochish →</span></button>
+            </div>
+            <p class="live-note" data-i18n="n.icarus">Interaktiv demo: vazifa yoki eslatma yozing yoki mikrofonni bosing — tool chaqiruvi va ro‘yxat jonli yangilanadi</p>
+          </figure>
+        </div>
+      </li>
+
+      <!-- 3. Agro Mach -->
+      <li class="project" data-project="Agro Mach" data-color="green">
+        <div class="work-top"><span class="work-ic" aria-hidden="true">04</span><span class="work-tag" data-i18n="tag.client">Mijoz loyihasi</span></div>
+        <h3>Agro Mach</h3>
+        <p class="p-sub" data-i18n="p3.s">Mini traktor sotuv tizimi + konsalting</p>
+        <ul class="bul" data-i18n="p3.b">
+          <li><b>Tizim:</b> mavjud dashboard va Telegram-botni to‘liq qayta brendlab, mini traktor sotuvini boshqarish tizimiga aylantirgan; mijoz tashriflari uchun botni qayta qurgan.</li>
+          <li><b>Imkoniyatlar:</b> mahsulotlar katalogi, to‘lov turlari (naqd, muddatli, shartnoma), Word shartnomalarni avtomatik yaratish.</li>
+          <li><b>Konsalting:</b> sotuv bo‘limini noldan qurish bo‘yicha shartnoma — kompaniya auditi, sotuv playbook, onboarding dasturi va qishloq fermerlariga moslashtirilgan o‘zbekcha skriptlar.</li>
+        </ul>
+        <p class="stack"><span class="lbl">Stack</span><span class="t" data-i18n="p3.stack">Veb-dashboard · Telegram Bot · DOCX avtogeneratsiya</span></p>
+        <div class="plinks">
+          <a class="plink main" href="" target="_blank" rel="noopener">Live ↗</a>
+          <a class="plink" href="" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+        <div class="shots">
+          <button type="button" class="shot" data-img><img src="images/projects/agromach-1.jpg" alt="Agro Mach — skrinshot 1" loading="lazy"><span class="ph-label"><span data-i18n="ph">Rasm joyi</span><code>images/projects/agromach-1.jpg</code></span></button>
+          <button type="button" class="shot" data-img><img src="images/projects/agromach-2.jpg" alt="Agro Mach — skrinshot 2" loading="lazy"><span class="ph-label"><span data-i18n="ph">Rasm joyi</span><code>images/projects/agromach-2.jpg</code></span></button>
+          <button type="button" class="shot" data-img><img src="images/projects/agromach-3.jpg" alt="Agro Mach — skrinshot 3" loading="lazy"><span class="ph-label"><span data-i18n="ph">Rasm joyi</span><code>images/projects/agromach-3.jpg</code></span></button>
+        </div>
+      </li>
+
+      <!-- 4. Liderlik Zamoni Akademiyasi -->
+      <li class="project" data-project="Liderlik Zamoni Akademiyasi" data-color="orange">
+        <div class="work-top"><span class="work-ic" aria-hidden="true">05</span><span class="work-tag" data-i18n="tag.client">Mijoz loyihasi</span></div>
+        <h3>Liderlik Zamoni Akademiyasi</h3>
+        <p class="p-sub" data-i18n="p4.s">Telegram sotuv boti va operator CRM</p>
+        <ul class="bul" data-i18n="p4.b">
+          <li><b>Jarayon:</b> FSM asosida lidlarni ro‘yxatga olish, operatorni biriktirish, demo-darsni rejalashtirish.</li>
+          <li><b>Avtomatlashtirish:</b> eslatmalar va demodan keyingi baholash (pg_cron / pg_net); mavjud Next.js/Supabase dashboard bilan integratsiya.</li>
+          <li><b>Qo‘shimcha:</b> moliyaviy boshqaruv jadvallari (Excel) va o‘zbek tilidagi HR/yuridik hujjatlar (mehnat shartnomalari, ish haqi nizomi).</li>
+        </ul>
+        <p class="stack"><span class="lbl">Stack</span><span class="t">Telegram Bot</span><span class="t">Next.js</span><span class="t">Supabase</span><span class="t">pg_cron</span><span class="t">pg_net</span></p>
+        <div class="plinks">
+          <a class="plink main" href="" target="_blank" rel="noopener">Live ↗</a>
+          <a class="plink" href="" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+        <div class="shots">
+          <button type="button" class="shot" data-img><img src="images/projects/liderlik-1.jpg" alt="Liderlik Zamoni Akademiyasi — skrinshot 1" loading="lazy"><span class="ph-label"><span data-i18n="ph">Rasm joyi</span><code>images/projects/liderlik-1.jpg</code></span></button>
+          <button type="button" class="shot" data-img><img src="images/projects/liderlik-2.jpg" alt="Liderlik Zamoni Akademiyasi — skrinshot 2" loading="lazy"><span class="ph-label"><span data-i18n="ph">Rasm joyi</span><code>images/projects/liderlik-2.jpg</code></span></button>
+        </div>
+      </li>
+
+
+      <!-- 6. Sales dashboards & AmoCRM -->
+      <li class="project wide">
+        <div class="work-top"><span class="work-ic" aria-hidden="true">06</span><span class="work-tag" data-i18n="tag.more">Qo‘shimcha</span></div>
+        <h3 data-i18n="p6.c.t">Sotuv dashboardlari va AmoCRM</h3>
+        <p class="p-sub" data-i18n="p6.c.d">Plan/fakt tahlili, reyting (leaderboard), davr filtri; AmoCRM integratsiyalari va vidjetlari.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===================== SKILLS ===================== -->
+<section id="skills" class="sec" aria-labelledby="h-skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="nav.skills">Ko‘nikmalar</span>
+      <h2 id="h-skills" data-i18n="h.skills">Nimalarni qila olaman</h2>
+    </div>
+    <article class="sm">
+      <div class="sm-head">
+        <span class="lab" data-i18n="sm.lab">Asosiy yo‘nalish</span>
+        <h3><span class="ic" aria-hidden="true"><svg><use href="#i-users"/></svg></span><span data-i18n="s.sales.t">Sotuv va boshqaruv</span></h3>
+        <p data-i18n="sm.lead">Sotuv bo‘limini noldan quraman: jamoa yig‘ish, skript va KPI’dan tortib jarayonlarni dashboard va CRM orqali nazorat qilishgacha.</p>
+      </div>
+      <div class="sm-groups">
+        <div class="sm-g"><h4><span class="n">01</span><span data-i18n="sm.g1.t">Sotuv bo‘limini qurish</span></h4>
+          <ul class="chips" data-i18n="sm.g1"><li>sotuv bo‘limini noldan qurish</li><li>sotuv skriptlari va playbooklar</li><li>SPIN selling — mijoz ehtiyojini aniqlashda</li><li>KPI tizimlari</li><li>plan/fakt tahlili va leaderboard</li></ul></div>
+        <div class="sm-g"><h4><span class="n">02</span><span data-i18n="sm.g2.t">Jamoa va HR</span></h4>
+          <ul class="chips" data-i18n="sm.g2"><li>xodimlarni tanlash va ishga olish</li><li>onboarding dasturlari</li><li>treninglar va darslar</li><li>sotuv operatorlarini boshqarish</li><li>o‘qituvchilar faoliyatini tizimlashtirish</li></ul></div>
+        <div class="sm-g"><h4><span class="n">03</span><span data-i18n="sm.g3.t">Boshqaruv</span></h4>
+          <ul class="chips" data-i18n="sm.g3"><li>loyiha boshqaruvi (PM)</li><li>vazifalarni taqsimlash</li><li>muddat va natija nazorati</li><li>AmoCRM jarayonlari</li><li>jarayonlarni raqamlashtirish</li></ul></div>
+      </div>
+      <dl class="sm-proof">
+        <div><dt>20+</dt><dd data-i18n="sm.p1">xodim ishga olingan — My Teacher</dd></div>
+        <div><dt>~10</dt><dd data-i18n="sm.p2">xodim ishga olingan — Deep AI</dd></div>
+        <div><dt>5</dt><dd data-i18n="sm.p3">xodim — BAD sohasida ROP</dd></div>
+        <div><dt>13</dt><dd data-i18n="sm.p4">o‘qituvchi faoliyati tizimlashtirilgan</dd></div>
+        <div><dt>1300+</dt><dd data-i18n="sm.p5">o‘quvchi jarayonlari yuritilgan</dd></div>
+      </dl>
+    </article>
+    <div class="skill-grid">
+      <div class="card sg"><h3><span class="ic" aria-hidden="true"><svg><use href="#i-code"/></svg></span>Vibecoding / Dev</h3>
+        <ul class="chips"><li>Next.js 14</li><li>Supabase (Auth, PostgreSQL, pg_cron)</li><li>Prisma</li><li>Python (aiogram)</li><li>Telegram Bot API</li><li>GramJS</li><li>Vercel</li></ul></div>
+      <div class="card sg"><h3><span class="ic" aria-hidden="true"><svg><use href="#i-spark"/></svg></span>AI</h3>
+        <ul class="chips" data-i18n="s.ai"><li>Claude / Anthropic API</li><li>tool use</li><li>AI agentlar</li><li>prompt yozish</li><li>AI yordamida tezkor prototiplash</li></ul></div>
+      <div class="card sg"><h3><span class="ic" aria-hidden="true"><svg><use href="#i-link"/></svg></span><span data-i18n="s.int.t">Integratsiyalar</span></h3>
+        <ul class="chips" data-i18n="s.int"><li>AmoCRM</li><li>MoiZvonki</li><li>webhooklar</li><li>Google Sheets</li><li>Telegram (Bot API va MTProto)</li></ul></div>
+      <div class="card sg"><h3><span class="ic" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span data-i18n="s.docs.t">Hujjatlar</span></h3>
+        <ul class="chips" data-i18n="s.docs"><li>Excel moliyaviy modellar</li><li>PowerPoint o‘quv materiallari</li><li>o‘zbek tilidagi Word shartnomalar</li></ul></div>
+      <div class="card sg"><h3><span class="ic" aria-hidden="true"><svg><use href="#i-globe"/></svg></span><span data-i18n="s.lang.t">Tillar</span></h3>
+        <ul class="chips" data-i18n="s.lang"><li>o‘zbek — ona tili</li><li>ingliz — B2</li><li>rus — A2</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EDUCATION ===================== -->
+<!-- DIPLOMA / CERTIFICATES: landscape scans (≈1.414:1, e.g. 1414×1000 .jpg) -->
+<section id="education" class="sec alt" aria-labelledby="h-edu">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="nav.edu">Ta’lim</span>
+      <h2 id="h-edu" data-i18n="sec.edu">Ta’lim va kurslar</h2>
+    </div>
+    <div class="edu-grid">
+      <div class="card edu-card">
+        <h3><span class="ic" aria-hidden="true"><svg><use href="#i-cap"/></svg></span><span data-i18n="edu.higher">Oliy ta’lim</span></h3>
+        <div class="edu-item">
+          <h4 data-i18n="edu.uni">Toshkent davlat iqtisodiyot universiteti</h4>
+          <p data-i18n="edu.uni.d">Iqtisodiyot fakulteti, «Iqtisodiyot tarmoqlari va sohalari» yo‘nalishi — tamomlagan.</p>
+          <button type="button" class="doc doc-dip" data-img data-group="edu"><img src="images/diploma.jpg" alt="Diplom — Toshkent davlat iqtisodiyot universiteti" data-i18n-attr="alt:edu.uni.alt" loading="lazy"><span class="ph-label"><span data-i18n="ph">Rasm joyi</span><code>images/diploma.jpg</code></span></button>
+          <span class="doc-cap" data-i18n="edu.diploma">Diplom</span>
+        </div>
+      </div>
+      <div class="card edu-card">
+        <h3><span class="ic" aria-hidden="true"><svg><use href="#i-award"/></svg></span><span data-i18n="edu.course">Kurs</span></h3>
+        <div class="edu-item">
+          <h4 data-i18n="edu.start">Alisher Isayevning «START 5.0» biznes kursi</h4>
+          <p data-i18n="edu.start.d">Muvaffaqiyatli tamomlagan.</p>
+          <button type="button" class="doc doc-photo" data-img data-group="edu"><img src="images/certificate-start.jpg" alt="«START 5.0» kursi — sertifikat topshirish" data-i18n-attr="alt:edu.start.alt" loading="lazy"><span class="ph-label"><span data-i18n="ph">Rasm joyi</span><code>images/certificate-start.jpg</code></span></button>
+          <span class="doc-cap" data-i18n="edu.cert">Sertifikat</span>
+        </div>
+      </div>
+      <div class="card edu-card">
+        <h3><span class="ic" aria-hidden="true"><svg><use href="#i-award"/></svg></span><span data-i18n="edu.course">Kurs</span></h3>
+        <div class="edu-item">
+          <h4 data-i18n="edu.sotuv">Alisher Avazovning «Sotuv 2.0» kursi</h4>
+          <p data-i18n="edu.start.d">Muvaffaqiyatli tamomlagan.</p>
+        </div>
+      </div>
+      <div class="card edu-card">
+        <h3><span class="ic" aria-hidden="true"><svg><use href="#i-award"/></svg></span><span data-i18n="edu.course">Kurs</span></h3>
+        <div class="edu-item">
+          <h4 data-i18n="edu.deepai">Shukrullo Ibrohimovning Deep AI kursi</h4>
+          <p data-i18n="edu.start.d">Muvaffaqiyatli tamomlagan.</p>
+        </div>
+      </div>
+      <!-- ADD MORE COURSES HERE — copy one "card edu-card" block above, change the title and the image file name.
+           Give the title a new data-i18n key and add that key to the ru and en dictionaries in the script. -->
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" class="sec" aria-labelledby="h-contact">
+  <div class="wrap">
+    <div class="contact-card">
+      <div class="contact-in">
+        <div>
+          <span class="eyebrow" data-i18n="nav.contact">Aloqa</span>
+          <h2 id="h-contact" data-i18n="h.contact">Keling, birga ishlaymiz</h2>
+          <p class="sub" data-i18n="c.lead">Loyiha, hamkorlik yoki ish taklifi bo‘yicha yozing — qisqa vaqt ichida javob beraman.</p>
+          <a class="btn btn-lg" href="mailto:diyorbeknosirov3010@gmail.com"><span data-i18n="cta.email">Email yozish</span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="contact-list">
+          <a class="cl-item" href="mailto:diyorbeknosirov3010@gmail.com"><span class="ic" aria-hidden="true"><svg><use href="#i-mail"/></svg></span><div><span>Email</span><b>diyorbeknosirov3010@<wbr>gmail.com</b></div></a>
+          <a class="cl-item" href="tel:+998940153010"><span class="ic" aria-hidden="true"><svg><use href="#i-phone"/></svg></span><div><span data-i18n="c.phone">Telefon</span><b>+998 94 015 30 10</b></div></a>
+          <a class="cl-item" href="tel:+998977386125"><span class="ic" aria-hidden="true"><svg><use href="#i-phone"/></svg></span><div><span data-i18n="c.phone">Telefon</span><b>+998 97 738 61 25</b></div></a>
+          <a class="cl-item" href="https://github.com/diyorbeknosirov" target="_blank" rel="noopener"><span class="ic" aria-hidden="true"><svg><use href="#i-gh"/></svg></span><div><span>GitHub</span><b>github.com/diyorbeknosirov</b></div></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap foot-in">
+    <a class="brand" href="#about"><span class="dot" aria-hidden="true">DN</span><span class="nm">Diyorbek Nosirov</span></a>
+    <span class="foot-muted">© <span id="year">2026</span> · <span data-i18n="hero.role">Loyiha menejeri (PM) · Sotuv tizimlarini qurish va raqamlashtirish · Vibecoder</span></span>
+    <a class="top" href="#about" data-i18n="f.top">Yuqoriga ↑</a>
+  </div>
+</footer>
+
+<!-- Live demo overlay -->
+<div class="demo-scrim" id="demo-scrim" aria-hidden="true"></div>
+<div class="demo" id="demo" role="dialog" aria-modal="true" aria-labelledby="demo-url" hidden>
+  <div class="demo-bar">
+    <button type="button" class="demo-btn" id="demo-back" data-i18n="demo.back">← Portfolioga qaytish</button>
+    <span class="demo-url" id="demo-url"></span>
+    <a class="demo-btn demo-new" id="demo-new" href="#" target="_blank" rel="noopener" data-i18n="demo.newtab">Yangi oynada ↗</a>
+  </div>
+  <div class="demo-stage">
+    <div class="demo-loading"><span class="demo-spinner" aria-hidden="true"></span><span data-i18n="demo.loading">Demo yuklanmoqda…</span></div>
+    <iframe id="demo-frame" title="Live demo"></iframe>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<dialog class="lb" id="lb" aria-label="Rasm" data-i18n-attr="aria-label:lb.label">
+  <div class="lb-inner">
+    <div class="lb-bar">
+      <span class="lb-count" id="lb-count"></span>
+      <button type="button" class="lb-btn" id="lb-close" data-i18n="lb.close">Yopish ✕</button>
+    </div>
+    <div class="lb-stage"><img id="lb-img" alt=""></div>
+    <div class="lb-foot">
+      <button type="button" class="lb-btn" id="lb-prev" aria-label="Oldingi" data-i18n-attr="aria-label:lb.prev">←</button>
+      <span class="lb-cap" id="lb-cap"></span>
+      <button type="button" class="lb-btn" id="lb-next" aria-label="Keyingi" data-i18n-attr="aria-label:lb.next">→</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Translations (Uzbek is read from the HTML itself) ---------- */
+  var I18N = {
+    ru: {
+      "n.icarus": "Интерактивное демо: напишите задачу или напоминание или нажмите на микрофон — вызов инструмента и список обновляются вживую",
+      "sm.lab": "Основное направление",
+      "sm.lead": "Выстраиваю отдел продаж с нуля: от найма команды, скриптов и KPI до контроля процессов через дашборды и CRM.",
+      "sm.g1.t": "Построение отдела продаж",
+      "sm.g1": "<li>построение отдела продаж с нуля</li><li>скрипты продаж и плейбуки</li><li>SPIN selling — для выявления потребностей</li><li>KPI-системы</li><li>план/факт-анализ и лидерборд</li>",
+      "sm.g2.t": "Команда и HR",
+      "sm.g2": "<li>подбор и найм сотрудников</li><li>программы онбординга</li><li>тренинги и занятия</li><li>управление операторами продаж</li><li>систематизация работы преподавателей</li>",
+      "sm.g3.t": "Управление",
+      "sm.g3": "<li>управление проектами (PM)</li><li>распределение задач</li><li>контроль сроков и результатов</li><li>процессы в AmoCRM</li><li>цифровизация процессов</li>",
+      "sm.p1": "сотрудников нанято — My Teacher",
+      "sm.p2": "сотрудников нанято — Deep AI",
+      "sm.p3": "сотрудников — РОП в сфере БАД",
+      "sm.p4": "преподавателей — работа систематизирована",
+      "sm.p5": "учеников — процессы под управлением",
+      "edu.deepai.alt": "Сертификат — курс Deep AI",
+      "edu.deepai": "Курс Deep AI Шукрулло Иброхимова",
+      "edu.sotuv.alt": "Сертификат — курс «Sotuv 2.0»",
+      "edu.sotuv": "Курс «Sotuv 2.0» Алишера Авазова",
+      "edu.course": "Курс",
+      "e7.b": "<li>Hop Shop — торговая компания, начинавшая как первый официальный ТВ-магазин в Узбекистане.</li><li>Консультировал клиентов по кухонной технике, презентовал товар и оформлял заказы.</li>",
+      "e6.b": "<li>Euphoria Group — компания, с 2019 года работающая в Узбекистане с натуральными БАДами (иммунитет, энергия, красота); продажи через колл-центр, ТВ- и онлайн-рекламу и собственную курьерскую службу.</li><li>Консультировал клиентов в колл-центре, подбирал продукт под их потребности и оформлял заказы на доставку.</li>",
+      "e4.o": "Сфера БАД (биологически активные добавки)",
+      "e3.b": "<li>MyTeacher — онлайн-платформа изучения английского: мобильное приложение и живые уроки с персональным ментором; курсы General English, IELTS, CEFR, Business English и для детей.</li><li>Работа с лидами: запись на бесплатный первый урок (на нём ментор определяет уровень и составляет личный план) и продажа пакетов подписки.</li>",
+      "tag.h2": "Системы продаж",
+      "b1": "года опыта",
+      "b2": "цифровых продуктов",
+      "h.exp": "Более 3 лет в продажах и управлении",
+      "h.projects": "Продукты, которые я создал как vibecoder",
+      "h.skills": "Что я умею",
+      "h.contact": "Давайте работать вместе",
+      "feat.lab": "Последняя должность",
+      "feat.s1": "курсовых направления — работа операторов",
+      "feat.s2": "система для операторов",
+      "feat.s3": "сотрудников нанято и прошли онбординг",
+      "t.mgmt": "Управление",
+      "t.sales": "Продажи",
+      "cta.email": "Написать на email",
+      "meta.title": "Диёрбек Носиров — проджект-менеджер, системы продаж, vibecoder",
+      "meta.desc": "Диёрбек Носиров: руководитель проектов (PM), выстраивает отделы продаж с нуля и создаёт продукты с помощью AI как vibecoder. Опыт, проекты и сертификаты.",
+      "f1": "направлений услуг",
+      "f2": "отраслевых сегмента",
+      "f3": "типа AI-аудита",
+      "n.orbex": "Лендинг: услуги, отрасли, процесс работы и форма заявки",
+      "n.audit": "AI-аудит: 2 типа аудита, статистика клиента и AI-анализ",
+      "n.dash": "Демо-версия: без пароля, на вымышленных данных — попробуйте роли Админ, Продавец и Ментор",
+      "skip": "Перейти к содержанию",
+      "nav.label": "Меню",
+      "lang.label": "Язык",
+      "nav.about": "Обо мне",
+      "nav.exp": "Опыт",
+      "nav.projects": "Проекты",
+      "nav.skills": "Навыки",
+      "nav.edu": "Образование",
+      "nav.contact": "Контакты",
+      "ph": "Место для фото",
+      "hero.role": "Руководитель проектов (PM) · Построение и цифровизация систем продаж · Vibecoder",
+      "hero.about": "Более 3 лет опыта в продажах, HR и операционном управлении. Выстраиваю отделы продаж с нуля, собираю команды и оцифровываю процессы с помощью дашбордов, CRM и Telegram-ботов. Как vibecoder, я с помощью AI-инструментов самостоятельно довожу идею до запущенного продукта — понимаю и бизнес-процесс, и техническое решение.",
+      "hero.cta1": "Связаться",
+      "hero.cta2": "Смотреть проекты →",
+      "stat1": "года опыта в продажах, HR и управлении",
+      "stat2": "цифровых продуктов создано",
+      "stat3": "учеников — их процессы были под моим управлением",
+
+      "e1.t": "Руководитель проектов (PM) и РОП",
+      "e1.o": "Deep AI — образовательная AI-платформа",
+      "e1.b": "<li>Управлял процессами проекта, распределял задачи в команде, выстроил контроль сроков и результатов.</li><li>Как РОП руководил работой операторов продаж по курсам Prompt Engineering, Media Master и Vibe Coding.</li><li>Создал дашборд продаж, KPI-систему для операторов и Telegram-ботов и внедрил их в ежедневную работу команды.</li><li>Нанял около 10 сотрудников; подготовил для них программы онбординга, проводил занятия и тренинги.</li>",
+      "e2.t": "Менеджер HR и академического отдела",
+      "e2.b": "<li>Подобрал и нанял более 20 сотрудников; подготовил и провёл для них программы онбординга и тренинги.</li><li>Систематизировал и контролировал работу 13 преподавателей академического отдела.</li><li>Вёл процессы, связанные с более чем 1300 учениками, и решал возникающие проблемы.</li>",
+      "e3.t": "Менеджер по продажам (онлайн-курсы английского)",
+      "e4.t": "РОП (руководитель отдела продаж)",
+      "e4.b": "<li>Управлял процессами отдела продаж и контролировал работу менеджеров.</li><li>Подобрал и нанял в отдел 5 сотрудников.</li>",
+      "e6.t": "Менеджер по продажам (БАД)",
+      "e7.t": "Менеджер по продажам (кухонная техника)",
+
+      "p.intro": "Продукты, которые я самостоятельно довёл от идеи до запуска с помощью AI-инструментов.",
+      "tag.personal": "Личный проект",
+      "tag.deepai": "Для Deep AI",
+      "tag.client": "Клиентский проект",
+      "tag.dev": "Личный продукт · в разработке",
+      "tag.more": "Ещё",
+      "p1.s": "Прототип платформы для идеи B2B IT-сервиса",
+      "p1.b": "<li><b>Лендинг (orbex.uz):</b> 5 направлений услуг — управленческий дашборд, интеграция с CRM (AmoCRM, Bitrix24), Telegram-бот и AI-агент, сайт и мобильное приложение, автоматизация процессов; сегменты по 4 отраслям (образование, торговля, услуги, производство), 5-этапный процесс работы и модель сотрудничества.</li><li><b>Поток лидов:</b> форма заявки, подключённая к Supabase, и уведомление в Telegram о каждом новом лиде.</li><li><b>AI-аудит (audit.orbex.uz):</b> два типа аудита — аудит цифровизации и полный бизнес-аудит. Собираются статистика клиента (лиды, конверсия, время ответа, объём продаж), финансы, рынок и конкуренты, маркетинг, цикл сделки и показатели каждого оператора; AI (Claude / OpenAI) оценивает текущее состояние, подбирает нужные услуги и даёт числовой прогноз. Вопросы подстраиваются под тип компании, результаты сохраняются в Supabase.</li><li><b>Админ-панель:</b> защищена через Supabase Auth.</li><li><b>ТЗ на ERP/CRM:</b> полная схема Prisma и поэтапная дорожная карта на 20 недель.</li>",
+      "p2.s": "Визуальный интерактивный дашборд и лидерборд для отдела продаж",
+      "p2.b": "<li><b>Дашборд и лидерборд:</b> система управления продажами для отдела продаж Deep AI; вход защищён email и паролем.</li><li><b>Модули:</b> счета (инвойсы), KPI операторов, анализ звонков.</li><li><b>Интеграции:</b> вебхуки AmoCRM и MoiZvonki; после подтверждения продажи доступ к курсу на платформе exode.biz открывается автоматически.</li><li><b>Telegram-боты:</b> кассовый бот и бот продаж для клиентов (Python / aiogram); бот продаж работает как webhook-сервис на Vercel.</li>",
+      "p3.s": "Система продаж мини-тракторов + консалтинг",
+      "p3.b": "<li><b>Система:</b> полностью ребрендировал существующий дашборд и Telegram-бота и превратил их в систему управления продажами мини-тракторов; перестроил бота под сценарий визитов клиентов.</li><li><b>Возможности:</b> каталог продукции, типы оплаты (наличные, рассрочка, договор), автоматическое формирование договоров в Word.</li><li><b>Консалтинг:</b> договор на построение отдела продаж с нуля — аудит компании, sales playbook, программа онбординга и скрипты на узбекском языке, адаптированные для сельских фермеров.</li>",
+      "p3.stack": "Веб-дашборд · Telegram Bot · автогенерация DOCX",
+      "p4.s": "Telegram-бот продаж и CRM для операторов",
+      "p4.b": "<li><b>Процесс:</b> регистрация лидов на базе FSM, назначение оператора, запись на демо-урок.</li><li><b>Автоматизация:</b> напоминания и оценка после демо (pg_cron / pg_net); интеграция с существующим дашбордом на Next.js/Supabase.</li><li><b>Дополнительно:</b> таблицы финансового управления (Excel) и HR/юридические документы на узбекском языке (трудовые договоры, положение об оплате труда).</li>",
+      "p5.s": "Личный AI-ассистент (PWA)",
+      "p5.b": "<li><b>Диалог и tool use:</b> Claude (Anthropic API) сам понимает из фразы пользователя, нужна ли задача или напоминание, вызывает инструменты <code>create_task</code> / <code>create_reminder</code> и записывает результат в Supabase.</li><li><b>Голос:</b> речь распознаётся через gpt-4o-transcribe в узбекский текст на латинице; ответ озвучивается gpt-4o-mini-tts тёплым, живым голосом.</li><li><b>Интеграции:</b> Google Sheets, push-уведомления, вход через Telegram MTProto (GramJS). Разработка продолжается.</li>",
+      "p6.c.t": "Дашборды продаж и AmoCRM",
+      "p6.c.d": "План/факт-анализ, лидерборд, фильтр по периоду; интеграции и виджеты AmoCRM.",
+
+      "s.ai": "<li>Claude / Anthropic API</li><li>tool use</li><li>AI-агенты</li><li>написание промптов</li><li>быстрое прототипирование с AI</li>",
+      "s.int.t": "Интеграции",
+      "s.int": "<li>AmoCRM</li><li>MoiZvonki</li><li>вебхуки</li><li>Google Sheets</li><li>Telegram (Bot API и MTProto)</li>",
+      "s.sales.t": "Продажи и управление",
+      "s.sales": "<li>построение отдела продаж с нуля</li><li>PM</li><li>HR</li><li>KPI-системы</li><li>скрипты продаж и плейбуки</li><li>SPIN selling — для выявления потребностей клиента</li>",
+      "s.docs.t": "Документы",
+      "s.docs": "<li>финансовые модели в Excel</li><li>обучающие материалы в PowerPoint</li><li>договоры в Word на узбекском языке</li>",
+      "s.lang.t": "Языки",
+      "s.lang": "<li>узбекский — родной</li><li>английский — B2</li><li>русский — A2</li>",
+
+      "sec.edu": "Образование и курсы",
+      "edu.higher": "Высшее образование",
+      "edu.uni": "Ташкентский государственный экономический университет",
+      "edu.uni.d": "Экономический факультет, направление «Отрасли и сферы экономики» — окончил.",
+      "edu.uni.alt": "Диплом — Ташкентский государственный экономический университет",
+      "edu.diploma": "Диплом",
+      "edu.courses": "Курсы",
+      "edu.start": "Бизнес-курс «START 5.0» Алишера Исаева",
+      "edu.start.d": "Успешно окончил.",
+      "edu.start.alt": "Курс «START 5.0» — вручение сертификата",
+      "edu.cert": "Сертификат",
+
+      "c.lead": "Пишите по поводу проекта, сотрудничества или предложения о работе — отвечу в ближайшее время.",
+      "c.phone": "Телефон",
+      "c.loc": "Локация",
+      "c.loc.v": "Узбекистан",
+      "f.top": "Наверх ↑",
+
+      "lb.label": "Просмотр изображения",
+      "lb.close": "Закрыть ✕",
+      "lb.prev": "Предыдущее",
+      "lb.next": "Следующее",
+      "shot": "скриншот",
+      "demo.open": "Открыть демо →",
+      "demo.back": "← Назад к портфолио",
+      "demo.newtab": "В новой вкладке ↗",
+      "demo.loading": "Загрузка демо…"
+    },
+    en: {
+      "n.icarus": "Interactive demo: type a task or reminder, or tap the mic — the tool call and the list update live",
+      "sm.lab": "Core expertise",
+      "sm.lead": "I build sales departments from scratch — from hiring, scripts and KPIs to running the process through dashboards and CRM.",
+      "sm.g1.t": "Sales department build-out",
+      "sm.g1": "<li>building a sales department from scratch</li><li>sales scripts and playbooks</li><li>SPIN selling for client discovery</li><li>KPI systems</li><li>plan-vs-actual analysis and leaderboards</li>",
+      "sm.g2.t": "Team & HR",
+      "sm.g2": "<li>recruiting and hiring</li><li>onboarding programs</li><li>trainings and lessons</li><li>managing sales operators</li><li>systematizing teachers’ work</li>",
+      "sm.g3.t": "Management",
+      "sm.g3": "<li>project management (PM)</li><li>task delegation</li><li>deadline and results control</li><li>AmoCRM workflows</li><li>process digitization</li>",
+      "sm.p1": "hires — My Teacher",
+      "sm.p2": "hires — Deep AI",
+      "sm.p3": "hires — ROP, supplements",
+      "sm.p4": "teachers’ work systematized",
+      "sm.p5": "students’ processes managed",
+      "edu.deepai.alt": "Certificate — Deep AI course",
+      "edu.deepai": "Shukrullo Ibrohimov’s Deep AI course",
+      "edu.sotuv.alt": "Certificate — “Sotuv 2.0” course",
+      "edu.sotuv": "Alisher Avazov’s “Sotuv 2.0” course",
+      "edu.course": "Course",
+      "e7.b": "<li>Hop Shop is a retail company that started as Uzbekistan’s first official TV store.</li><li>Advised customers on kitchen appliances, presented products and processed orders.</li>",
+      "e6.b": "<li>Euphoria Group has sold natural dietary supplements (immunity, energy, beauty) in Uzbekistan since 2019, through a call center, TV and online advertising and its own courier service.</li><li>Advised customers in the call center, matched products to their needs and processed orders for delivery.</li>",
+      "e4.o": "Dietary supplements (BAD) industry",
+      "e3.b": "<li>MyTeacher is an online English platform: a mobile app plus live lessons with a personal mentor; General English, IELTS, CEFR, Business English and Kids courses.</li><li>Worked the leads: booked free first lessons (where a mentor assesses the level and builds a personal plan) and sold subscription packages.</li>",
+      "tag.h2": "Sales systems",
+      "b1": "years of experience",
+      "b2": "digital products",
+      "h.exp": "3+ years in sales and management",
+      "h.projects": "Products I’ve built as a vibecoder",
+      "h.skills": "What I can do",
+      "h.contact": "Let’s work together",
+      "feat.lab": "Latest role",
+      "feat.s1": "course lines — operators managed",
+      "feat.s2": "system for operators",
+      "feat.s3": "employees hired and onboarded",
+      "t.mgmt": "Management",
+      "t.sales": "Sales",
+      "cta.email": "Send an email",
+      "meta.title": "Diyorbek Nosirov — Project Manager, sales systems, vibecoder",
+      "meta.desc": "Diyorbek Nosirov: Project Manager who builds sales departments from scratch and ships products with AI as a vibecoder. Experience, projects and certificates.",
+      "f1": "service lines",
+      "f2": "industry segments",
+      "f3": "AI audit types",
+      "n.orbex": "Landing: services, industries, process and contact form",
+      "n.audit": "AI audit: 2 audit types, client statistics and AI analysis",
+      "n.dash": "Demo version: no password, fictional data — try the Admin, Sales and Mentor roles",
+      "skip": "Skip to content",
+      "nav.label": "Menu",
+      "lang.label": "Language",
+      "nav.about": "About",
+      "nav.exp": "Experience",
+      "nav.projects": "Projects",
+      "nav.skills": "Skills",
+      "nav.edu": "Education",
+      "nav.contact": "Contact",
+      "ph": "Image placeholder",
+      "hero.role": "Project Manager (PM) · Building and digitizing sales systems · Vibecoder",
+      "hero.about": "3+ years in sales, HR and operations management. I build sales departments from scratch, put teams together and digitize processes with dashboards, CRM and Telegram bots. As a vibecoder, I use AI tools to take an idea all the way to a launched product on my own — I understand both the business process and the technical solution.",
+      "hero.cta1": "Get in touch",
+      "hero.cta2": "See projects →",
+      "stat1": "years of sales, HR and management experience",
+      "stat2": "digital products built",
+      "stat3": "students whose processes I managed",
+
+      "e1.t": "Project Manager (PM) & Head of Sales (ROP)",
+      "e1.o": "Deep AI — AI education platform",
+      "e1.b": "<li>Ran project processes, distributed team tasks and set up control of deadlines and results.</li><li>As Head of Sales, managed the sales operators for the Prompt Engineering, Media Master and Vibe Coding courses.</li><li>Built a sales dashboard, an operator KPI system and Telegram bots, and rolled them into the team’s daily work.</li><li>Hired about 10 employees; prepared onboarding programs and ran lessons and trainings for them.</li>",
+      "e2.t": "HR & Academic Department Manager",
+      "e2.b": "<li>Recruited and hired 20+ employees; built and ran onboarding programs and trainings for them.</li><li>Systematized and supervised the work of 13 teachers in the academic department.</li><li>Handled processes for 1,300+ students and resolved issues as they came up.</li>",
+      "e3.t": "Sales Specialist (online English courses)",
+      "e4.t": "Head of Sales (ROP)",
+      "e4.b": "<li>Managed sales department processes and supervised the sales team.</li><li>Recruited and hired 5 people for the department.</li>",
+      "e6.t": "Sales Specialist (dietary supplements)",
+      "e7.t": "Sales Specialist (kitchen appliances)",
+
+      "p.intro": "Products I took from idea to launch on my own, using AI tools.",
+      "tag.personal": "Personal project",
+      "tag.deepai": "For Deep AI",
+      "tag.client": "Client project",
+      "tag.dev": "Personal product · in development",
+      "tag.more": "More",
+      "p1.s": "Platform prototype for a B2B IT-services idea",
+      "p1.b": "<li><b>Landing page (orbex.uz):</b> 5 service lines — management dashboard, CRM integration (AmoCRM, Bitrix24), Telegram bot and AI agent, website and mobile app, process automation; segments for 4 industries (education, trade, services, manufacturing), a 5-stage delivery process and the partnership model.</li><li><b>Lead flow:</b> contact form connected to Supabase, with a Telegram notification for every new lead.</li><li><b>AI audit (audit.orbex.uz):</b> two audit types — a digitization audit and a full business audit. It collects client statistics (leads, conversion, response time, sales volume), financials, market and competitors, marketing, sales cycle and per-operator performance; AI (Claude / OpenAI) assesses the current state, recommends the services needed and gives a numeric forecast. Questions adapt to the company type; results are stored in Supabase.</li><li><b>Admin panel:</b> protected by Supabase Auth.</li><li><b>ERP/CRM technical specification:</b> a full Prisma schema and a 20-week phased roadmap.</li>",
+      "p2.s": "Visual, interactive dashboard and leaderboard for the sales team",
+      "p2.b": "<li><b>Dashboard and leaderboard:</b> a sales management system for the Deep AI sales team, with sign-in protected by email and password.</li><li><b>Modules:</b> invoices, operator KPIs, call log analysis.</li><li><b>Integrations:</b> AmoCRM and MoiZvonki webhooks; once a sale is approved, course access on exode.biz opens automatically.</li><li><b>Telegram bots:</b> a cashier bot and a customer-facing sales bot (Python / aiogram); the sales bot runs as a webhook service on Vercel.</li>",
+      "p3.s": "Mini-tractor sales system + consulting",
+      "p3.b": "<li><b>System:</b> fully rebranded an existing dashboard and Telegram bot into a mini-tractor sales management system; rebuilt the bot around customer-visit workflows.</li><li><b>Features:</b> product catalog, payment types (cash, installment, contract), automatic Word contract generation.</li><li><b>Consulting:</b> a contract to build the sales department from scratch — company audit, sales playbook, onboarding program and Uzbek-language scripts tailored to rural farmers.</li>",
+      "p3.stack": "Web dashboard · Telegram Bot · DOCX generation",
+      "p4.s": "Telegram sales bot and operator CRM",
+      "p4.b": "<li><b>Flow:</b> FSM-based lead registration, operator assignment, demo-lesson scheduling.</li><li><b>Automation:</b> reminders and post-demo ratings (pg_cron / pg_net); integrated with the existing Next.js/Supabase dashboard.</li><li><b>Extras:</b> financial management workbooks (Excel) and Uzbek-language HR/legal documents (employment contracts, salary regulations).</li>",
+      "p5.s": "Personal AI assistant (PWA)",
+      "p5.b": "<li><b>Chat and tool use:</b> Claude (Anthropic API) works out from what the user says whether a task or a reminder is needed, calls the <code>create_task</code> / <code>create_reminder</code> tools and saves the result to Supabase.</li><li><b>Voice:</b> speech is transcribed with gpt-4o-transcribe into Latin-script Uzbek; replies are read aloud by gpt-4o-mini-tts in a warm, lively voice.</li><li><b>Integrations:</b> Google Sheets, push notifications, sign-in via Telegram MTProto (GramJS). Still in development.</li>",
+      "p6.c.t": "Sales dashboards and AmoCRM",
+      "p6.c.d": "Plan-vs-actual analysis, leaderboard, period filter; AmoCRM integrations and widgets.",
+
+      "s.ai": "<li>Claude / Anthropic API</li><li>tool use</li><li>AI agents</li><li>prompt writing</li><li>rapid AI-assisted prototyping</li>",
+      "s.int.t": "Integrations",
+      "s.int": "<li>AmoCRM</li><li>MoiZvonki</li><li>webhooks</li><li>Google Sheets</li><li>Telegram (Bot API and MTProto)</li>",
+      "s.sales.t": "Sales & management",
+      "s.sales": "<li>building a sales department from scratch</li><li>PM</li><li>HR</li><li>KPI systems</li><li>sales scripts and playbooks</li><li>SPIN selling for client discovery</li>",
+      "s.docs.t": "Documents",
+      "s.docs": "<li>Excel financial models</li><li>PowerPoint training materials</li><li>Uzbek-language Word contracts</li>",
+      "s.lang.t": "Languages",
+      "s.lang": "<li>Uzbek — native</li><li>English — B2</li><li>Russian — A2</li>",
+
+      "sec.edu": "Education & courses",
+      "edu.higher": "Higher education",
+      "edu.uni": "Tashkent State University of Economics",
+      "edu.uni.d": "Faculty of Economics, “Economic sectors and industries” — graduated.",
+      "edu.uni.alt": "Diploma — Tashkent State University of Economics",
+      "edu.diploma": "Diploma",
+      "edu.courses": "Courses",
+      "edu.start": "Alisher Isayev’s “START 5.0” business course",
+      "edu.start.d": "Completed successfully.",
+      "edu.start.alt": "“START 5.0” course — certificate ceremony",
+      "edu.cert": "Certificate",
+
+      "c.lead": "Write to me about a project, a collaboration or a job offer — I’ll get back to you shortly.",
+      "c.phone": "Phone",
+      "c.loc": "Location",
+      "c.loc.v": "Uzbekistan",
+      "f.top": "Back to top ↑",
+
+      "lb.label": "Image viewer",
+      "lb.close": "Close ✕",
+      "lb.prev": "Previous",
+      "lb.next": "Next",
+      "shot": "screenshot",
+      "demo.open": "Open demo →",
+      "demo.back": "← Back to portfolio",
+      "demo.newtab": "Open in new tab ↗",
+      "demo.loading": "Loading demo…"
+    }
+  };
+
+  var MONTHS = {
+    uz: ["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentabr","oktabr","noyabr","dekabr"],
+    ru: ["янв.","февр.","март","апр.","май","июнь","июль","авг.","сент.","окт.","нояб.","дек."],
+    en: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+  };
+
+  var root = document.documentElement;
+  var descMeta = document.querySelector('meta[name="description"]');
+  var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var mainEl = document.getElementById("main");
+
+  var UZ = { "meta.title": document.title, "meta.desc": descMeta ? descMeta.content : "", "lb.label": "Rasm", "lb.close": "Yopish ✕", "lb.prev": "Oldingi", "lb.next": "Keyingi", "shot": "skrinshot" };
+  var textNodes = document.querySelectorAll("[data-i18n]");
+  textNodes.forEach(function (el) { var k = el.getAttribute("data-i18n"); if (!(k in UZ)) UZ[k] = el.innerHTML; });
+  var attrNodes = document.querySelectorAll("[data-i18n-attr]");
+  attrNodes.forEach(function (el) {
+    el.getAttribute("data-i18n-attr").split(";").forEach(function (pair) {
+      var p = pair.split(":"); var attr = p[0].trim(), k = p[1].trim();
+      if (!(k in UZ)) UZ[k] = el.getAttribute(attr) || "";
+    });
+  });
+  I18N.uz = UZ;
+
+  var current = "uz";
+  function t(k) { var d = I18N[current] || UZ; return (k in d) ? d[k] : UZ[k]; }
+  function fmtYM(ym, lang) { var p = ym.split("-"); return MONTHS[lang][parseInt(p[1], 10) - 1] + " " + p[0]; }
+
+  function setLang(lang) {
+    if (!I18N[lang]) lang = "uz";
+    current = lang; root.lang = lang;
+    textNodes.forEach(function (el) { el.innerHTML = t(el.getAttribute("data-i18n")); });
+    attrNodes.forEach(function (el) {
+      el.getAttribute("data-i18n-attr").split(";").forEach(function (pair) { var p = pair.split(":"); el.setAttribute(p[0].trim(), t(p[1].trim())); });
+    });
+    document.querySelectorAll("[data-range]").forEach(function (el) {
+      var r = el.getAttribute("data-range").split("/");
+      el.textContent = fmtYM(r[0], lang) + " — " + fmtYM(r[1], lang);
+    });
+    document.querySelectorAll("[data-project]").forEach(function (proj) {
+      var name = proj.getAttribute("data-project");
+      proj.querySelectorAll(".shot img").forEach(function (img, i) { img.alt = name + " — " + t("shot") + " " + (i + 1); });
+    });
+    document.title = t("meta.title");
+    if (descMeta) descMeta.content = t("meta.desc");
+    document.querySelectorAll(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === lang)); });
+    try { localStorage.setItem("dn-lang", lang); } catch (e) {}
+  }
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var l = b.getAttribute("data-lang");
+      if (l === current) return;
+      if (reduce) { setLang(l); return; }
+      mainEl.classList.add("swap");
+      setTimeout(function () { setLang(l); mainEl.classList.remove("swap"); }, 180);
+    });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem("dn-lang"); } catch (e) {}
+  setLang(saved && I18N[saved] ? saved : "uz");
+
+  /* ---------- Images that failed before this script ran ---------- */
+  document.querySelectorAll("[data-img] img").forEach(function (img) {
+    if (img.complete && img.naturalWidth === 0 && img.getAttribute("loading") !== "lazy") {
+      var p = img.closest("[data-img]"); p.classList.add("is-missing"); p.setAttribute("aria-disabled", "true");
+    }
+  });
+
+  /* ---------- Header shadow on scroll ---------- */
+  var header = document.getElementById("nav");
+  var onHdr = function () { header.classList.toggle("scrolled", window.scrollY > 8); };
+  onHdr(); addEventListener("scroll", onHdr, { passive: true });
+
+  /* ---------- Lightbox ---------- */
+  var lb = document.getElementById("lb"), lbImg = document.getElementById("lb-img"), lbCap = document.getElementById("lb-cap");
+  var lbCount = document.getElementById("lb-count"), lbPrev = document.getElementById("lb-prev"), lbNext = document.getElementById("lb-next");
+  var group = [], idx = 0, opener = null;
+  function groupFor(btn) {
+    var list = btn.closest(".shots") ? btn.closest(".shots").querySelectorAll("[data-img]")
+             : btn.hasAttribute("data-group") ? document.querySelectorAll('[data-group="' + btn.getAttribute("data-group") + '"]') : [btn];
+    return Array.prototype.filter.call(list, function (b) { return !b.classList.contains("is-missing"); });
+  }
+  function show(i) {
+    idx = (i + group.length) % group.length;
+    var img = group[idx].querySelector("img");
+    lbImg.src = img.currentSrc || img.src; lbImg.alt = img.alt; lbCap.textContent = img.alt;
+    lbCount.textContent = group.length > 1 ? (idx + 1) + " / " + group.length : "";
+    lbPrev.hidden = lbNext.hidden = group.length < 2;
+  }
+  function openLb(btn) {
+    if (btn.classList.contains("is-missing")) return;
+    group = groupFor(btn); if (!group.length) return;
+    opener = btn; show(group.indexOf(btn));
+    if (typeof lb.showModal === "function") lb.showModal(); else lb.setAttribute("open", "");
+    root.style.overflow = "hidden";
+    document.getElementById("lb-close").focus();
+  }
+  function closeLb() { if (lb.open && typeof lb.close === "function") lb.close(); else lb.removeAttribute("open"); }
+  lb.addEventListener("close", function () { root.style.overflow = ""; lbImg.removeAttribute("src"); if (opener) opener.focus(); });
+  document.querySelectorAll("button.shot, button.doc").forEach(function (b) { b.addEventListener("click", function () { openLb(b); }); });
+  document.getElementById("lb-close").addEventListener("click", closeLb);
+  lbPrev.addEventListener("click", function () { show(idx - 1); });
+  lbNext.addEventListener("click", function () { show(idx + 1); });
+  lb.addEventListener("click", function (e) { if (e.target === lb || e.target.classList.contains("lb-stage")) closeLb(); });
+  lb.addEventListener("keydown", function (e) {
+    if (group.length < 2) return;
+    if (e.key === "ArrowLeft") { e.preventDefault(); show(idx - 1); }
+    if (e.key === "ArrowRight") { e.preventDefault(); show(idx + 1); }
+  });
+
+  /* ---------- Active section in nav ---------- */
+  var links = document.querySelectorAll('.nav a[href^="#"]');
+  if ("IntersectionObserver" in window) {
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        links.forEach(function (a) { a.removeAttribute("aria-current"); });
+        var a = map[en.target.id];
+        if (a) {
+          a.setAttribute("aria-current", "true");
+          var nav = a.closest(".nav");
+          if (nav && nav.scrollWidth > nav.clientWidth) nav.scrollTo({ left: a.offsetLeft - 20, behavior: "auto" });
+        }
+      });
+    }, { rootMargin: "-40% 0px -55% 0px" });
+    Object.keys(map).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+  }
+
+  /* ---------- Count-up numbers ---------- */
+  var countUp = function (el, delay) {
+    var end = +el.getAttribute("data-count"), suf = el.getAttribute("data-suffix") || "";
+    if (reduce || !end) return;
+    el.setAttribute("aria-label", end + suf);
+    el.textContent = "0" + suf;
+    setTimeout(function () {
+      var t0 = null;
+      var step = function (ts) {
+        if (!t0) t0 = ts;
+        var k = Math.min(1, (ts - t0) / 1600), e = 1 - Math.pow(1 - k, 4);
+        el.textContent = Math.round(end * e) + suf;
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, delay || 0);
+  };
+  document.querySelectorAll(".metric .num[data-count]").forEach(function (n, i) { countUp(n, 950 + i * 80); });
+
+  /* ---------- Scroll reveal ---------- */
+  if (!reduce && "IntersectionObserver" in window) {
+    var rv = document.querySelectorAll(".sec-head, .featured, .tl-item, .project, .sm, .sm-g, .sg, .edu-card, .contact-card");
+    var rio = new IntersectionObserver(function (entries) {
+      entries.filter(function (e) { return e.isIntersecting; })
+        .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left; })
+        .forEach(function (e, i) {
+          var el = e.target;
+          el.style.setProperty("--rd", (i * 90) + "ms");
+          el.classList.add("in"); rio.unobserve(el);
+          setTimeout(function () { el.style.removeProperty("--rd"); }, 1400);
+        });
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.06 });
+    rv.forEach(function (el) { el.setAttribute("data-reveal", ""); rio.observe(el); });
+  }
+
+  /* ---------- Timeline progress line ---------- */
+  var tl = document.querySelector(".tl");
+  if (tl && !reduce) {
+    var tItems = tl.querySelectorAll(".tl-item"), tTick = false;
+    var nodeTop = function (li) { return li.querySelector(".tl-node").getBoundingClientRect().top; };
+    var tUpd = function () {
+      tTick = false;
+      var top = tl.getBoundingClientRect().top;
+      var first = nodeTop(tItems[0]) - top;
+      var h = Math.max(1, nodeTop(tItems[tItems.length - 1]) - top - first);
+      var line = innerHeight * 0.62 - top - first;
+      tl.style.setProperty("--h", h + "px");
+      tl.style.setProperty("--t", (first + 9) + "px");
+      tl.style.setProperty("--p", Math.max(0, Math.min(1, line / h)).toFixed(4));
+      tItems.forEach(function (li) { li.classList.toggle("passed", nodeTop(li) - top - first <= line + 2); });
+    };
+    var tOn = function () { if (!tTick) { tTick = true; requestAnimationFrame(tUpd); } };
+    addEventListener("scroll", tOn, { passive: true }); addEventListener("resize", tOn); tUpd();
+  }
+
+  /* ---------- Project glow: lights up while the project is in focus ---------- */
+  var projects = document.querySelectorAll(".project");
+  if ("IntersectionObserver" in window) {
+    var pio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.target.classList.toggle("is-active", e.isIntersecting); });
+    }, { rootMargin: "-40% 0px -40% 0px" });
+    projects.forEach(function (p) { pio.observe(p); });
+  }
+  projects.forEach(function (p) {
+    p.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse") return;
+      var r = p.getBoundingClientRect();
+      p.style.setProperty("--mx", Math.round(e.clientX - r.left) + "px");
+      p.style.setProperty("--my", Math.round(e.clientY - r.top) + "px");
+    });
+  });
+
+  /* ---------- Live previews (scaled iframes, loaded near the viewport) ---------- */
+  var views = document.querySelectorAll(".live-view");
+  var fit = function (v) { v.style.setProperty("--s", (v.clientWidth / 1280).toFixed(4)); };
+  if ("ResizeObserver" in window) {
+    var ro = new ResizeObserver(function (es) { es.forEach(function (e) { fit(e.target); }); });
+    views.forEach(function (v) { ro.observe(v); });
+  } else { views.forEach(fit); addEventListener("resize", function () { views.forEach(fit); }); }
+  var withLang = function (url) {
+    return /^https?:/i.test(url) ? url : url.split("?")[0] + "?lang=" + current;
+  };
+  var loadPreview = function (v) {
+    var f = v.querySelector("iframe");
+    if (f && !f.getAttribute("src")) {
+      f.addEventListener("load", function () { v.classList.add("loaded"); }, { once: true });
+      f.setAttribute("src", withLang(f.getAttribute("data-src")));
+    }
+  };
+  var syncLangLinks = function () {
+    document.querySelectorAll("a[data-lang-link]").forEach(function (a) { a.setAttribute("href", withLang(a.getAttribute("href"))); });
+    views.forEach(function (v) {
+      var f = v.querySelector("iframe");
+      if (f && f.getAttribute("src") && !/^https?:/i.test(f.getAttribute("data-src"))) {
+        var next = withLang(f.getAttribute("data-src"));
+        if (f.getAttribute("src") !== next) f.setAttribute("src", next);
+      }
+    });
+  };
+  syncLangLinks();
+  document.querySelectorAll(".lang button").forEach(function (b) { b.addEventListener("click", function () { setTimeout(syncLangLinks, 250); }); });
+  if ("IntersectionObserver" in window) {
+    var lio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { loadPreview(e.target); lio.unobserve(e.target); } });
+    }, { rootMargin: "400px 0px" });
+    views.forEach(function (v) { lio.observe(v); });
+  } else { views.forEach(loadPreview); }
+
+  /* ---------- Demo overlay: the preview expands into a full-screen live demo ---------- */
+  var demo = document.getElementById("demo"), scrim = document.getElementById("demo-scrim");
+  var dFrame = document.getElementById("demo-frame"), dUrl = document.getElementById("demo-url");
+  var dNew = document.getElementById("demo-new"), dBack = document.getElementById("demo-back");
+  var DUR = reduce ? 0 : 750, dBusy = false, dFrom = null, dProject = null, dPushed = false;
+  var inertEls = [header, mainEl, document.querySelector(".site-footer")];
+  var clipTo = function (el) {
+    var r = el.getBoundingClientRect();
+    demo.style.setProperty("--ct", Math.max(0, r.top) + "px");
+    demo.style.setProperty("--cl", Math.max(0, r.left) + "px");
+    demo.style.setProperty("--cr", Math.max(0, innerWidth - r.right) + "px");
+    demo.style.setProperty("--cb", Math.max(0, innerHeight - r.bottom) + "px");
+  };
+  function openDemo(btn) {
+    if (dBusy || !demo.hidden) return;
+    dBusy = true; dFrom = btn; dProject = btn.closest(".project");
+    var url = withLang(btn.getAttribute("data-demo"));
+    if (dProject) { dProject.classList.add("is-active"); demo.style.setProperty("--pc", getComputedStyle(dProject).getPropertyValue("--pc").trim()); dProject.classList.add("is-launching"); }
+    if (dProject && dProject.dataset.brand) demo.setAttribute("data-brand", dProject.dataset.brand); else demo.removeAttribute("data-brand");
+    dUrl.textContent = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    dNew.href = url;
+    demo.classList.remove("loaded", "full", "animating");
+    setTimeout(function () {
+      clipTo(btn.closest(".live-view"));
+      dFrame.onload = function () { if (dFrame.getAttribute("src") !== "about:blank") demo.classList.add("loaded"); };
+      dFrame.src = url;
+      demo.hidden = false; scrim.classList.add("on");
+      root.style.overflow = "hidden";
+      inertEls.forEach(function (el) { if (el) el.inert = true; });
+      void demo.offsetWidth;
+      demo.classList.add("animating");
+      requestAnimationFrame(function () { demo.classList.add("full"); });
+      setTimeout(function () {
+        demo.classList.remove("animating");
+        if (dProject) dProject.classList.remove("is-launching");
+        dBusy = false; dBack.focus();
+      }, DUR + 40);
+      try { history.pushState({ demo: 1 }, ""); dPushed = true; } catch (e) { dPushed = false; }
+    }, reduce ? 0 : 280);
+  }
+  function closeDemo() {
+    if (demo.hidden || dBusy) return;
+    dBusy = true;
+    if (dFrom) clipTo(dFrom.closest(".live-view"));
+    demo.classList.add("animating");
+    requestAnimationFrame(function () { demo.classList.remove("full"); });
+    scrim.classList.remove("on");
+    setTimeout(function () {
+      demo.hidden = true; demo.classList.remove("animating", "loaded");
+      dFrame.onload = null; dFrame.src = "about:blank";
+      root.style.overflow = "";
+      inertEls.forEach(function (el) { if (el) el.inert = false; });
+      dBusy = false;
+      if (dFrom) dFrom.focus({ preventScroll: true });
+    }, DUR + 40);
+  }
+  var requestClose = function () { if (dPushed) { dPushed = false; history.back(); } else { closeDemo(); } };
+  document.querySelectorAll(".live-hit").forEach(function (b) { b.addEventListener("click", function () { openDemo(b); }); });
+  dBack.addEventListener("click", requestClose);
+  scrim.addEventListener("click", requestClose);
+  addEventListener("popstate", function () { if (!demo.hidden) { dPushed = false; closeDemo(); } });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !demo.hidden) { e.preventDefault(); requestClose(); } });
+
+  var y = document.getElementById("year"); if (y) y.textContent = String(new Date().getFullYear());
+})();
+</script>
+</body>
+</html>
