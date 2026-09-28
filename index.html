@@ -58,7 +58,7 @@ document.addEventListener('error', function (e) {
   }
 }
 @media (min-width:760px){ :root{ --gutter:28px; } }
-@media (min-width:960px){ :root{ --header-h:72px; } }
+@media (min-width:1080px){ :root{ --header-h:72px; } }
 
 *,*::before,*::after{ box-sizing:border-box; }
 html{ scroll-behavior:smooth; scrollbar-gutter:stable; -webkit-text-size-adjust:100%; scroll-padding-top:calc(var(--header-h) + env(safe-area-inset-top) + 8px); }
@@ -104,12 +104,16 @@ svg.i{ width:20px; height:20px; flex:none; }
 .lang button{ font:inherit; font-weight:800; font-size:12px; letter-spacing:.04em; background:transparent; color:var(--chip-ink); border:0; cursor:pointer; min-width:38px; min-height:32px; border-radius:999px; transition:background .25s, color .25s, box-shadow .25s; }
 .lang button[aria-pressed="true"]{ background:var(--surface); color:var(--heading); box-shadow:0 2px 8px rgba(15,70,113,.14); }
 .header-cta{ display:none; }
-@media (min-width:960px){
+@media (min-width:1080px){
   .header-inner{ grid-template-columns:auto 1fr auto; grid-template-areas:"brand nav right"; height:72px; }
   .brand{ padding:0; }
-  .nav{ margin:0; padding:0; justify-self:center; }
-  .nav ul{ gap:28px; padding:0; }
-  .header-cta{ display:inline-flex; }
+  .nav{ margin:0; padding:0; justify-self:center; min-width:0; }
+  .nav ul{ gap:20px; padding:0; }
+  .nav a{ font-size:14px; }
+}
+@media (min-width:1240px){
+  .nav ul{ gap:28px; }
+  .nav a{ font-size:14.5px; }
 }
 
 /* ---------- Hero ---------- */
@@ -455,6 +459,49 @@ h1.name{ font-size:clamp(42px, 9.5vw, 76px); font-weight:800; line-height:1.02; 
 .doc-photo img{ object-position:50% 45%; }
 .doc-cap{ display:inline-block; margin-top:10px; font-size:12.5px; font-weight:800; color:var(--chip-ink); background:var(--chip-bg); padding:4px 12px; border-radius:999px; }
 
+
+/* ---------- Vision / cover letter (Orbex look) ---------- */
+.vision{ position:relative; overflow:hidden; isolation:isolate; border-radius:var(--r-lg); background:#0B1420; color:#EFEAE0; box-shadow:var(--shadow-lg); display:grid; gap:0; }
+.vision::before{ content:""; position:absolute; left:0; right:0; top:0; height:3px; background:linear-gradient(90deg,#FF6B3D,#C24B29); transform-origin:left; transition:transform 1.2s cubic-bezier(.16,1,.3,1) .3s; }
+.js .vision[data-reveal]:not(.in)::before{ transform:scaleX(0); }
+.vision::after{ content:""; position:absolute; z-index:-1; width:520px; height:520px; right:-160px; top:-200px; border-radius:50%; background:radial-gradient(circle,rgba(255,107,61,.16),transparent 65%); }
+.v-letter{ padding:34px 24px; }
+.v-eyebrow{ color:#FF6B3D; }
+.v-eyebrow::before{ background:#FF6B3D; }
+.vision h2{ color:#fff; font-size:clamp(26px,3.6vw,38px); font-weight:800; margin-top:14px; max-width:18em; }
+.v-body{ margin-top:22px; position:relative; }
+.v-body::before{ content:"“"; position:absolute; left:-4px; top:-58px; font-family:"Cormorant Garamond", Georgia, serif; font-size:100px; line-height:1; color:rgba(255,107,61,.25); pointer-events:none; }
+.v-body p{ font-size:16.5px; line-height:1.75; color:#D9D3C7; margin-top:14px; max-width:40em; }
+.v-body .v-hello{ color:#fff; font-weight:700; margin-top:0; }
+.v-sign{ margin-top:26px; display:flex; flex-direction:column; gap:2px; }
+.v-sign span{ color:#8CA0B3; font-size:14.5px; }
+.v-sign b{ font-family:"Cormorant Garamond", Georgia, serif; font-style:italic; font-weight:600; font-size:34px; color:#fff; letter-spacing:.01em; line-height:1.15; }
+.v-sign small{ color:#FF6B3D; font-weight:700; font-size:13px; letter-spacing:.04em; }
+.v-side{ background:#101E2E; border-top:1px solid #223449; padding:28px 24px; display:flex; flex-direction:column; }
+.v-brand{ display:flex; align-items:center; gap:12px; padding-bottom:20px; border-bottom:1px solid #223449; }
+.v-logo{ width:44px; height:44px; border-radius:12px; background:#0B1420; box-shadow:inset 0 0 0 1px #223449; display:grid; place-items:center; padding:8px; flex:none; }
+.v-logo img{ width:100%; height:100%; object-fit:contain; }
+.v-logo img + .logo-fb{ display:none; }
+.v-logo .logo-fb{ width:100%; height:100%; }
+.v-brand b{ font-family:var(--font-display); font-size:20px; color:#fff; display:block; letter-spacing:-.01em; }
+.v-brand small{ color:#8CA0B3; font-size:12.5px; }
+.v-side h3{ color:#fff; font-size:16px; margin:20px 0 6px; font-family:var(--font-display); }
+.v-steps{ list-style:none; display:flex; flex-direction:column; }
+.v-steps li{ display:flex; gap:14px; padding:14px 0; border-bottom:1px dashed #223449; }
+.v-steps li:last-child{ border-bottom:0; }
+.v-steps .n{ font-family:var(--font-mono); font-size:12.5px; font-weight:700; color:#FF6B3D; border:1px solid rgba(255,107,61,.4); border-radius:8px; height:26px; padding:0 7px; display:grid; place-items:center; flex:none; }
+.v-steps b{ color:#fff; font-size:15.5px; }
+.v-steps p{ color:#8CA0B3; font-size:14px; margin-top:2px; line-height:1.5; }
+.v-links{ margin-top:auto; padding-top:18px; display:flex; flex-wrap:wrap; gap:8px; }
+.v-links a{ font-size:13.5px; font-weight:700; color:#EFEAE0; border:1px solid #223449; border-radius:999px; padding:8px 14px; transition:border-color .25s, background .25s, transform .18s; }
+.v-links a:hover{ border-color:#FF6B3D; transform:translateY(-2px); }
+.v-links .v-cta{ background:linear-gradient(120deg,#FF6B3D,#FF8A5C); border-color:transparent; color:#fff; box-shadow:0 10px 24px rgba(255,107,61,.3); }
+@media (min-width:900px){
+  .vision{ grid-template-columns:1.55fr 1fr; }
+  .v-letter{ padding:52px 52px 48px; }
+  .v-side{ border-top:0; border-left:1px solid #223449; padding:44px 36px; }
+}
+
 /* ---------- Contact ---------- */
 .contact-card{ position:relative; border-radius:var(--r-lg); overflow:hidden; background:linear-gradient(135deg,#0a3050,#155f96 55%,#1f93c9); color:#fff; padding:36px 22px; box-shadow:var(--shadow-lg); isolation:isolate; }
 .contact-card::before{ content:""; position:absolute; z-index:-1; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%); bottom:-180px; left:-100px; animation:drift 13s ease-in-out infinite alternate; }
@@ -575,6 +622,7 @@ main.swap{ opacity:0; }
         <li><a href="#projects" data-i18n="nav.projects">Loyihalar</a></li>
         <li><a href="#skills" data-i18n="nav.skills">Ko‘nikmalar</a></li>
         <li><a href="#education" data-i18n="nav.edu">Ta’lim</a></li>
+        <li><a href="#vision" data-i18n="nav.vision">Maqsad</a></li>
         <li><a href="#contact" data-i18n="nav.contact">Aloqa</a></li>
       </ul>
     </nav>
@@ -1005,6 +1053,47 @@ main.swap{ opacity:0; }
   </div>
 </section>
 
+<!-- ===================== VISION / COVER LETTER ===================== -->
+<section id="vision" class="sec" aria-labelledby="h-vision">
+  <div class="wrap">
+    <article class="vision">
+      <div class="v-letter">
+        <span class="eyebrow v-eyebrow" data-i18n="v.eyebrow">Maqsad</span>
+        <h2 id="h-vision" data-i18n="v.h">Maqsadim: O‘zbekistondagi bizneslarni tizimli qilish</h2>
+        <div class="v-body">
+          <p class="v-hello" data-i18n="v.p0">Assalomu alaykum!</p>
+          <p data-i18n="v.p1">Uch yildan ortiq sotuv bo‘limlarida ishlab, bir holatni qayta-qayta ko‘rdim: kompaniyada yaxshi mahsulot ham, harakat qiladigan jamoa ham bor — lekin jarayonlar tarqoq. Lidlar Excel va Telegram chatlarida yo‘qoladi, KPI qo‘lda hisoblanadi, rahbar esa haqiqiy holatni faqat oy oxirida bilib qoladi.</p>
+          <p data-i18n="v.p2">Shuning uchun Orbex’ni boshladim — bu mening mualliflik loyiham. G‘oyasi oddiy: tayyor shablon sotmasdan, har bir biznesning o‘z jarayoniga moslab dashboard, CRM integratsiyasi va Telegram-botlarni bitta ishlaydigan tizimga bog‘lash. Birinchi qadam sifatida AI audit vositasini yaratdim: u kompaniya raqamlarini tahlil qilib, sotuv qayerda yo‘qolayotganini ko‘rsatadi.</p>
+          <p data-i18n="v.p3">Maqsadim — O‘zbekistondagi bizneslarni raqamlashtirish va tizimlashtirish: sotuv bo‘limini noldan qurish tajribamni texnik yechimlar bilan birlashtirib, har bir rahbar o‘z biznesini bitta ekranda ko‘ra oladigan holatga olib kelish.</p>
+          <p data-i18n="v.p4">Agar bu g‘oya sizga yaqin bo‘lsa — hamkorlik, loyiha yoki jamoangizga taklif bo‘yicha yozing.</p>
+        </div>
+        <div class="v-sign">
+          <span data-i18n="v.sign">Hurmat bilan,</span>
+          <b>Diyorbek Nosirov</b>
+          <small data-i18n="v.role">Orbex muallifi</small>
+        </div>
+      </div>
+      <aside class="v-side">
+        <div class="v-brand">
+          <span class="v-logo"><img src="https://audit.orbex.uz/assets/orbex_icon_only_transparent.png" alt="" loading="lazy" onerror="this.remove()"><svg class="logo-fb" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#FF6B3D" stroke-width="2.2" stroke-linecap="round"><path d="M7 6.5 17 12M7 17.5 17 12M7 6.5v11"/></g><g fill="#FF6B3D"><circle cx="6.5" cy="6" r="3"/><circle cx="6.5" cy="18" r="3"/><circle cx="17.5" cy="12" r="3.4"/></g></svg></span>
+          <div><b>orbex</b><small data-i18n="v.tag">Biznes tizimlarini bir-biriga bog‘lash</small></div>
+        </div>
+        <h3 data-i18n="v.how">Qanday ishlayman</h3>
+        <ol class="v-steps">
+          <li><span class="n">01</span><div><b data-i18n="v.s1.t">Audit</b><p data-i18n="v.s1.d">Raqamlar va jarayonlarni ko‘rib, sotuv qayerda yo‘qolayotganini aniqlash</p></div></li>
+          <li><span class="n">02</span><div><b data-i18n="v.s2.t">Tizim</b><p data-i18n="v.s2.d">Dashboard, CRM va Telegram-botlarni bitta zanjirga bog‘lash</p></div></li>
+          <li><span class="n">03</span><div><b data-i18n="v.s3.t">Jamoa</b><p data-i18n="v.s3.d">Skript, KPI va onboarding bilan sotuv bo‘limini yo‘lga qo‘yish</p></div></li>
+        </ol>
+        <div class="v-links">
+          <a href="https://www.orbex.uz/" target="_blank" rel="noopener">orbex.uz ↗</a>
+          <a href="https://audit.orbex.uz/" target="_blank" rel="noopener">AI audit ↗</a>
+          <a href="#contact" class="v-cta" data-i18n="v.cta">Bog‘lanish →</a>
+        </div>
+      </aside>
+    </article>
+  </div>
+</section>
+
 <!-- ===================== CONTACT ===================== -->
 <section id="contact" class="sec" aria-labelledby="h-contact">
   <div class="wrap">
@@ -1074,6 +1163,25 @@ main.swap{ opacity:0; }
   /* ---------- Translations (Uzbek is read from the HTML itself) ---------- */
   var I18N = {
     ru: {
+      "nav.vision": "Цель",
+      "v.eyebrow": "Цель",
+      "v.h": "Моя цель — системный бизнес в Узбекистане",
+      "v.p0": "Здравствуйте!",
+      "v.p1": "За три с лишним года в отделах продаж я снова и снова видел одно и то же: у компании есть хороший продукт и старательная команда — но процессы разрознены. Лиды теряются в Excel и Telegram-чатах, KPI считают вручную, а руководитель узнаёт реальную картину только в конце месяца.",
+      "v.p2": "Поэтому я начал Orbex — мой авторский проект. Идея простая: не продавать готовые шаблоны, а связывать дашборды, интеграции с CRM и Telegram-ботов в одну работающую систему под процессы конкретного бизнеса. Первым шагом я сделал инструмент AI-аудита: он анализирует цифры компании и показывает, где теряются продажи.",
+      "v.p3": "Моя цель — цифровизация и систематизация бизнеса в Узбекистане: соединить опыт построения отделов продаж с нуля с техническими решениями, чтобы каждый руководитель видел свой бизнес на одном экране.",
+      "v.p4": "Если вам близка эта идея — напишите мне о сотрудничестве, проекте или предложении в команду.",
+      "v.sign": "С уважением,",
+      "v.role": "автор Orbex",
+      "v.tag": "Связываем системы бизнеса между собой",
+      "v.how": "Как я работаю",
+      "v.s1.t": "Аудит",
+      "v.s1.d": "Смотрю цифры и процессы, нахожу, где теряются продажи",
+      "v.s2.t": "Система",
+      "v.s2.d": "Связываю дашборд, CRM и Telegram-ботов в одну цепочку",
+      "v.s3.t": "Команда",
+      "v.s3.d": "Запускаю отдел продаж со скриптами, KPI и онбордингом",
+      "v.cta": "Связаться →",
       "n.icarus": "Интерактивное демо: напишите задачу или напоминание или нажмите на микрофон — вызов инструмента и список обновляются вживую",
       "sm.lab": "Основное направление",
       "sm.lead": "Выстраиваю отдел продаж с нуля: от найма команды, скриптов и KPI до контроля процессов через дашборды и CRM.",
@@ -1207,6 +1315,25 @@ main.swap{ opacity:0; }
       "demo.loading": "Загрузка демо…"
     },
     en: {
+      "nav.vision": "Goal",
+      "v.eyebrow": "Goal",
+      "v.h": "My goal: systematic businesses in Uzbekistan",
+      "v.p0": "Hello!",
+      "v.p1": "In over three years in sales departments I kept seeing the same thing: a company has a good product and a hard-working team, but its processes are scattered. Leads get lost in Excel and Telegram chats, KPIs are counted by hand, and the manager only sees the real picture at the end of the month.",
+      "v.p2": "That’s why I started Orbex — my own project. The idea is simple: instead of selling ready-made templates, connect dashboards, CRM integrations and Telegram bots into one working system built around each business’s own processes. As a first step I built an AI audit tool that analyzes a company’s numbers and shows where sales are being lost.",
+      "v.p3": "My goal is to digitize and systematize businesses in Uzbekistan — combining my experience of building sales departments from scratch with technical solutions, so every manager can see their business on one screen.",
+      "v.p4": "If this idea resonates with you, write to me about a collaboration, a project or a role on your team.",
+      "v.sign": "Best regards,",
+      "v.role": "author of Orbex",
+      "v.tag": "Connecting business systems",
+      "v.how": "How I work",
+      "v.s1.t": "Audit",
+      "v.s1.d": "Look at the numbers and processes to find where sales leak",
+      "v.s2.t": "System",
+      "v.s2.d": "Connect dashboards, CRM and Telegram bots into one chain",
+      "v.s3.t": "Team",
+      "v.s3.d": "Set up the sales team with scripts, KPIs and onboarding",
+      "v.cta": "Get in touch →",
       "n.icarus": "Interactive demo: type a task or reminder, or tap the mic — the tool call and the list update live",
       "sm.lab": "Core expertise",
       "sm.lead": "I build sales departments from scratch — from hiring, scripts and KPIs to running the process through dashboards and CRM.",
@@ -1491,7 +1618,7 @@ main.swap{ opacity:0; }
 
   /* ---------- Scroll reveal ---------- */
   if (!reduce && "IntersectionObserver" in window) {
-    var rv = document.querySelectorAll(".sec-head, .featured, .tl-item, .project, .sm, .sm-g, .sg, .edu-card, .contact-card");
+    var rv = document.querySelectorAll(".sec-head, .featured, .tl-item, .project, .sm, .sm-g, .sg, .edu-card, .vision, .contact-card");
     var rio = new IntersectionObserver(function (entries) {
       entries.filter(function (e) { return e.isIntersecting; })
         .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left; })
